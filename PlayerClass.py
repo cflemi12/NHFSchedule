@@ -39,3 +39,8 @@ class Player(object):
         if restriction is None:
             self.restriciton = []
         self.schedule = []
+
+    def getinfo(self):
+        return [self.name, self.division, self.hometown, self.school, self.anniversary, self.sande, self.cit, self.se1,
+                self.se2, self.bowl, self.seed]
+
