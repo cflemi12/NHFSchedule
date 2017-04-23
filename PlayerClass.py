@@ -9,18 +9,33 @@ class Player(object):
     """ Defines a player in the NHF.
 
         Attributes:
-            name - Name of participant.
-            seed - Character A to J that represents seat number.
-            grade - Grade of player.
-            schedule - Array of time blocks representing schedule.
-            sides - Array representation of participating in side events.
-            restrictions - Time blocks representing when a player can't participate.
+            name - String of name of participant.
+            division - String of Elementary, 7, or 8 grade.
+            hometown - String of where the player is from.
+            school - String of school they're representing.
+            anniversary - Boolean for participating in the anniversary side event.
+            sande - Boolean for participating in the sports and entertainment bee.
+            cit - Boolean for participating in the citizens exam.
+            se1 - Boolean for participating in the Subject Exam #1.
+            se2 - Boolean for participating in the Subject Exam #2.
+            bowl - Boolean for participating in the Bowl.
+            seed - String representing seat seed. 
     """
 
-    def __init__(self, name, seed, grade, sides, *restrictions):
+    def __init__(self, name, division, hometown, school, anniversary, sande, cit, se1, se2,
+                 bowl, seed, restriction=None):
         self.name = name
+        self.division = division
+        self.hometown = hometown
+        self.school = school
+        self.anniversary = anniversary
+        self.sande = sande
+        self.cit = cit
+        self.se1 = se1
+        self.se2 = se2
+        self.bowl = bowl
         self.seed = seed
-        self.grade = grade
-        self.sides = sides
-        self.restrictions = restrictions
+        self.restriciton = restriction
+        if restriction is None:
+            self.restriciton = []
         self.schedule = []
