@@ -12,10 +12,10 @@ class Room(object):
 
     """ Initiates a room. """
 
-    def __init__(self, number):
+    def __init__(self, number, schedule):
         self.number = number
         self.rounds = []
-        for i in range(8):
+        for i in range(len(schedule)):
             roster = {"a": None, "b": None, "c": None, "d": None, "e": None, "f": None, "g": None, "h": None, "i": None,
                       "j": None}
             self.rounds.append(roster)

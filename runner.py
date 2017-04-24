@@ -2,12 +2,15 @@ from openpyxl import load_workbook
 from PlayerClass import Player
 from TournamentClass import Tournament
 
+""" Initalize a new tournament. """
 nhf = Tournament()
 field = []
 
+""" Load kids data. """
 wb = load_workbook("practice.xlsx", read_only=True, data_only=True)
 ws = wb.active
 
+""" Create players from data. """
 for row in ws:
     name = str(row[0].value) + " " + str(row[1].value)
     division = str(row[2].value)
@@ -27,6 +30,4 @@ for row in ws:
 
 wb.close()
 
-for player in field:
-    print player.schedule
 

@@ -14,10 +14,21 @@ Defines a tournament set schedule.
         citizenschedule - Intervals of citizenship bee round times.
         sandeschedule - Intervals of sports and entertainment bee round times.
         anniversaryschedule - Intervals of anniversary bee round times. 
-        bowlschedule - Intervals of bowl round times. 
+        bowlschedule - Intervals of bowl round times.
+        buzzerrooms - Rooms for the regular history bee.
+        anniversaryroom - Rooms for anniversary bee.
+        sanderoom - Rooms for the sports and entertainment bee.
+        citizenroom - Rooms for the citizenship bee.
+        examroom - ExamRoom for all regular exams.
+        militaryroom - Military exam room.
+        geographyroom - Geography exam room.
+        csaroom - CSA exam room.
+        
 """
 
 from interval import interval
+from RoomClass import Room
+from ExamRoomClass import ExamRoom
 
 
 class Tournament(object):
@@ -76,5 +87,10 @@ class Tournament(object):
         for start in times:
             k = interval(start, start + 3)
             self.bowlschedule.append(k)
+        """ Initialize rooms. """
+        self.buzzerrooms = []
+        for i in range(45):
+            r = Room(i, self.buzzerschedule)
+            self.buzzerrooms.append(r)
 
 
