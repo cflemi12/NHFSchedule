@@ -4,26 +4,6 @@ Class for rooms.
 @date: 4/23/17
 
 Defines a tournament set schedule. 
-
-    Attributes:
-        buzzerschedule - Intervals of buzzer round times.
-        examschedule - Intervals of regular exam round times.
-        militaryschedule - Intervals of military exam round times.
-        geographyschedule - Intervals of geography exam round times.
-        csaexamschedule - Intervals of citizen, sports, and anniversary exam round times.
-        citizenschedule - Intervals of citizenship bee round times.
-        sandeschedule - Intervals of sports and entertainment bee round times.
-        anniversaryschedule - Intervals of anniversary bee round times. 
-        bowlschedule - Intervals of bowl round times.
-        buzzerrooms - Rooms for the regular history bee.
-        anniversaryroom - Rooms for anniversary bee.
-        sanderoom - Rooms for the sports and entertainment bee.
-        citizenroom - Rooms for the citizenship bee.
-        examroom - ExamRoom for all regular exams.
-        militaryroom - Military exam room.
-        geographyroom - Geography exam room.
-        csaroom - CSA exam room.
-        
 """
 
 from interval import interval
@@ -35,7 +15,28 @@ from SideEventRoomClass import SideEventRoom
 class Tournament(object):
     """Tournament that will hold the schedules for each event in the form of intervals whose points
     are times. E.G. 110 represents friday at 10am, while 215.5 represents Saturdat at 3:30pm. The 
-    tournament object will also hold the rooms necessary for the tournament."""
+    tournament object will also hold the rooms necessary for the tournament.
+
+        Attributes:
+            buzzerschedule - Intervals of buzzer round times.
+            examschedule - Intervals of regular exam round times.
+            militaryschedule - Intervals of military exam round times.
+            geographyschedule - Intervals of geography exam round times.
+            csaexamschedule - Intervals of citizen, sports, and anniversary exam round times.
+            citizenschedule - Intervals of citizenship bee round times.
+            sandeschedule - Intervals of sports and entertainment bee round times.
+            anniversaryschedule - Intervals of anniversary bee round times. 
+            bowlschedule - Intervals of bowl round times.
+            buzzerrooms - Rooms for the regular history bee.
+            anniversaryroom - Rooms for anniversary bee.
+            sanderoom - Rooms for the sports and entertainment bee.
+            citizenroom - Rooms for the citizenship bee.
+            examroom - ExamRoom for all regular exams.
+            militaryroom - Military exam room.
+            geographyroom - Geography exam room.
+            csaroom - CSA exam room.
+
+    """
 
     def __init__(self):
         """ Initialize the tournament by creating the schedule and the rooms. """

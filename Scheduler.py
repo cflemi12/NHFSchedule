@@ -8,16 +8,17 @@ File that includes heavy lifting functions. Does most of the work for scheduling
 
 from openpyxl import load_workbook
 from PlayerClass import Player
+from FPDFClass import PDF
 
 
-def generateplayingfield(file, tournament):
+def generateplayingfield(info, tournament):
     """Generates the playing field given the raw data.
     Gets passed the file name and the tournament.
     """
 
     # load workbook data
     players = []
-    wb = load_workbook(file, read_only=True, data_only=True)
+    wb = load_workbook(info, read_only=True, data_only=True)
     ws = wb.active
 
     # construct players from each row value
@@ -40,4 +41,14 @@ def generateplayingfield(file, tournament):
 
     # close workbook and return players
     wb.close()
+
+    # remove headers from xlsx file
+    players.pop(0)
     return players
+
+
+def createpdfs(players):
+    for player in players:
+        pdf = PDF()
+        pdf.print_schedule(player.name, player.schedule)
+        pdf.output('Schedules/' + player.name + '.pdf', 'F')
