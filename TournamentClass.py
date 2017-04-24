@@ -29,21 +29,24 @@ Defines a tournament set schedule.
 from interval import interval
 from RoomClass import Room
 from ExamRoomClass import ExamRoom
+from SideEventRoomClass import SideEventRoom
 
 
 class Tournament(object):
-
-    """ Initiates a tournament. """
+    """Tournament that will hold the schedules for each event in the form of intervals whose points
+    are times. E.G. 110 represents friday at 10am, while 215.5 represents Saturdat at 3:30pm. The 
+    tournament object will also hold the rooms necessary for the tournament."""
 
     def __init__(self):
-        """ Fill buzzer schedule. """
+        """ Initialize the tournament by creating the schedule and the rooms. """
         self.buzzerschedule = []
         times = [110, 110.5, 111, 111.5, 113, 113.5, 114, 114.5,
                  211, 211.5, 212, 212.5, 214, 214.5, 215, 215.5, ]
         for start in times:
             k = interval(start, start + .5)
             self.buzzerschedule.append(k)
-        """ Fill exam schedule. """
+
+        # fill exam schedule
         self.examschedule = []
         times = [110, 111, 114, 115, 118, 119, 120,
                  209, 211, 214, 215]
@@ -65,7 +68,8 @@ class Tournament(object):
         for start in times:
             k = interval(start, start + 1)
             self.csaexamschedule.append(k)
-        """ Fill side schedule. """
+
+        # fill side schedule
         self.citizenschedule = []
         times = [115, 209]
         for start in times:
@@ -81,16 +85,16 @@ class Tournament(object):
         for start in times:
             k = interval(start, start + .5)
             self.anniversaryschedule.append(k)
-        """ Fill bowl schedule. """
+
+        # fill bowl schedule
         self.bowlschedule = []
         times = [118, 218]
         for start in times:
             k = interval(start, start + 3)
             self.bowlschedule.append(k)
-        """ Initialize rooms. """
+
+        # initialize rooms
         self.buzzerrooms = []
         for i in range(45):
             r = Room(i, self.buzzerschedule)
             self.buzzerrooms.append(r)
-
-

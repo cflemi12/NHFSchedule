@@ -11,9 +11,9 @@ from RoomClass import Room
 
 
 class ExamRoom(Room):
-    """ Initiates an exam room. """
 
     def __init__(self, number, name, schedule):
+        """ Initiates an exam room. """
         super(Room, self).__init__()
         self.name = name
         self.number = number

@@ -10,9 +10,9 @@ Defines a room.
 
 class Room(object):
 
-    """ Initiates a room. """
-
     def __init__(self, number, schedule):
+        """ Initiates a room. """
+
         self.number = number
         self.rounds = []
         for i in range(len(schedule)):

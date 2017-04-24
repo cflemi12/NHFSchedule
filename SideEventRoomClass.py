@@ -11,9 +11,9 @@ from RoomClass import Room
 
 
 class SideEventRoom(Room):
-    """ Initiates a side event room. """
 
     def __init__(self, number, name, schedule):
+        """ Initiates a side event room. """
         super(Room, self).__init__()
         self.name = name
         self.number = number
