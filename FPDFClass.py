@@ -7,51 +7,58 @@ Enables use of HTML.
 
 from fpdf import FPDF
 
-title = "National History Fair Schedule"
+title = "Schedule"
 
 
 class PDF(FPDF):
     def header(self):
-        # Arial bold 15
-        self.set_font('Arial', 'B', 15)
+        #logo
+        self.image("Images/ACE_logo_Bee.jpg", 10, 13 ,40)
+        self.image("Images/ACE_logo_Bee.jpg", 160, 13 ,40)
+        self.set_font('Helvetica', '', 32)
         # Calculate width of title and position
-        w = self.get_string_width(title) + 6
+        w = self.get_string_width(title) + 10
         self.set_x((210 - w) / 2)
-        # Colors of frame, background and text
-        self.set_draw_color(0, 80, 180)
-        self.set_fill_color(230, 230, 0)
-        self.set_text_color(220, 50, 50)
-        # Thickness of frame (1 mm)
-        self.set_line_width(1)
+        # Colors
+        self.set_text_color(12, 12, 12)
         # Title
-        self.cell(w, 9, title, 1, 1, 'C', 1)
+        self.cell(w, 39, title, 0, 1, 'C', 0)
         # Line break
-        self.ln(10)
+        self.ln(1)
 
     def footer(self):
         # Position at 1.5 cm from bottom
         self.set_y(-15)
         # Arial italic 8
-        self.set_font('Arial', 'I', 6)
+        self.set_font('Helvetica', 'I', 6)
         # Text color in gray
         self.set_text_color(128)
+        # Give border
+        self.set_line_width(1)
         # Page number
-        self.cell(0, 10, "National History Fair", 0, 0, 'C')
+        self.cell(0, 10, "National History Bee", 0, 0, 'C')
 
     def schedule_name(self, name):
         # Arial 12
-        self.set_font('Arial', '', 12)
-        # Background color
-        self.set_fill_color(200, 220, 255)
+        self.set_font('Helvetica', 'B', 22)
         # Title
-        self.cell(0, 6, name, 0, 1, 'L', 1)
+        w = self.get_string_width(name) + 10
+        self.set_x((210 - w) / 2)
+        self.set_line_width(1.25)
+        self.cell(w, 15, name, 1, 1, 'C', 0)
         # Line break
-        self.ln(4)
+        self.ln(10)
 
     def schedule_body(self, schedule):
         # add schedule to pdf
         # something to do with
-        pass
+        self.set_margins(10, 10)
+        self.set_line_width(.75)
+        self.set_font('Helvetica', '', 16)
+        for i in range(5):
+            self.cell(95, 20, "Sample n Exam", align="C", border=1)
+            self.cell(95, 20, "Friday nn:00 am", align="C", border=1)
+            self.ln(20)
 
     def print_schedule(self, name, schedule):
         self.add_page()
