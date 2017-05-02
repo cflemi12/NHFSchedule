@@ -18,7 +18,7 @@ def generateplayingfield(info, tournament):
 
     # load workbook data
     players = []
-    wb = load_workbook(info, read_only=True, data_only=True)
+    wb = load_workbook(info, read_only=True)
     ws = wb.active
 
     # construct players from each row value
@@ -27,16 +27,18 @@ def generateplayingfield(info, tournament):
         division = str(row[2].value)
         hometown = str(row[3].value)
         school = str(row[4].value)
-        anniversary = str(row[5].value).lower() in ['yes']
-        sande = str(row[6].value).lower() in ['yes']
-        citizen = str(row[7].value).lower() in ['yes']
-        military = str(row[8].value).lower() in ['military']
-        geography = str(row[9].value).lower() in ['geography']
-        csaexam = str(row[10].value).lower in ['yes']
-        bowl = str(row[11].value).lower() in ['yes']
-        seed = str(row[12].value).lower()
-        newplayer = Player(name, division, hometown, school, anniversary, sande, citizen, military, geography,
-                           csaexam, bowl, seed, tournament)
+        bee = str(row[5].value).lower() in ['yes']
+        bowl = str(row[6].value).lower() in ['yes']
+        anniversary = str(row[7].value).lower() in ['yes']
+        sande = str(row[8].value).lower() in ['yes']
+        citizen = str(row[9].value).lower() in ['yes']
+        military = str(row[10].value).lower() in ['military']
+        geography = str(row[11].value).lower() in ['geography']
+        csaexam = str(row[12].value).lower in ['yes']
+        fqn = str(row[13].value).lower in ['yes']
+        seed = str(row[14].value).lower()
+        newplayer = Player(name, division, hometown, school, bee, bowl, anniversary, sande, citizen,
+                           military, geography, csaexam, fqn, seed, tournament)
         players.append(newplayer)
 
     # close workbook and return players

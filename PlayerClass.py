@@ -14,7 +14,7 @@ class Player(object):
                division - String of Elementary, 7, or 8 grade.
                hometown - String of where the player is from.
                school - String of school they're representing.
-               anniversary - Boolean for participating in the anniversary bee.
+               anniversary - Boolean for participating in the anniversary challenge.
                sande - Boolean for participating in the sports and entertainment bee.
                citizen - Boolean for participating in the citizenship bee.
                military - Boolean for participating in the Subject Exam #1.
@@ -24,28 +24,34 @@ class Player(object):
                seed - String representing seat seed. 
     """
 
-    def __init__(self, name, division, hometown, school, anniversary, sande, citizen, military, geography,
-                 csaexam, bowl, seed, tournament, restriction=None):
+    def __init__(self, name, division, hometown, school, bee, bowl, anniversary, sande, citizen, military,
+                 geography, csaexam, fqn, seed, tournament, restriction=None):
         """ Initiates the player. """
         self.name = name
         self.division = division
         self.hometown = hometown
         self.school = school
+        self.bee = bee
+        self.bowl = bowl
         self.anniversary = anniversary
         self.sande = sande
         self.citizen = citizen
         self.military = military
         self.geography = geography
         self.csaexam = csaexam
-        self.bowl = bowl
+        self.fqn = fqn
         self.seed = seed
         self.restriciton = restriction
+
         if restriction is None:
             self.restriciton = []
         self.schedule = []
         if bowl:
-            for length in tournament.bowlschedule:
-                self.restriciton.append(length)
+            for period in tournament.bowlschedule:
+                self.restriciton.append(period)
+        if fqn:
+            for period in tournament.fqnschedule:
+                self.restriciton.append(period)
 
     def getinfo(self):
         """ Returns the basic information of each player in a list. """

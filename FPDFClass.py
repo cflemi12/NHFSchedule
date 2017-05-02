@@ -12,9 +12,9 @@ title = "Schedule"
 
 class PDF(FPDF):
     def header(self):
-        #logo
-        self.image("Images/ACE_logo_Bee.jpg", 10, 13 ,40)
-        self.image("Images/ACE_logo_Bee.jpg", 160, 13 ,40)
+        # logo
+        self.image("Images/ACE_logo_Bee.jpg", 10, 13, 40)
+        self.image("Images/ACE_logo_Bee.jpg", 160, 13, 40)
         self.set_font('Helvetica', '', 32)
         # Calculate width of title and position
         w = self.get_string_width(title) + 10

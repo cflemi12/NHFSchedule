@@ -8,8 +8,11 @@ Defines a tournament set schedule.
 
 from interval import interval
 from RoomClass import Room
-from ExamRoomClass import ExamRoom
-from SideEventRoomClass import SideEventRoom
+
+# from ExamRoomClass import ExamRoom
+# from SideEventRoomClass import SideEventRoom
+
+MAX_ROOMS = 45
 
 
 class Tournament(object):
@@ -27,6 +30,7 @@ class Tournament(object):
             sandeschedule - Intervals of sports and entertainment bee round times.
             anniversaryschedule - Intervals of anniversary bee round times. 
             bowlschedule - Intervals of bowl round times.
+            fqnschedule - Intervals for family quiz night.
             buzzerrooms - Rooms for the regular history bee.
             anniversaryroom - Rooms for anniversary bee.
             sanderoom - Rooms for the sports and entertainment bee.
@@ -94,8 +98,15 @@ class Tournament(object):
             k = interval(start, start + 3)
             self.bowlschedule.append(k)
 
+        # fill fqn schedule
+        self.fqnschedule = []
+        times = [118]
+        for start in times:
+            k = interval(start, start + 3)
+            self.fqnschedule.append(k)
+
         # initialize rooms
         self.buzzerrooms = []
-        for i in range(45):
+        for i in range(MAX_ROOMS):
             r = Room(i, self.buzzerschedule)
             self.buzzerrooms.append(r)
