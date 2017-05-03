@@ -18,11 +18,13 @@ def generateplayingfield(info, tournament):
 
     # load workbook data
     players = []
-    wb = load_workbook(info, read_only=True)
+    wb = load_workbook(info, read_only=True, data_only=True)
     ws = wb.active
 
     # construct players from each row value
     for row in ws:
+        if str(row[0].value).lower() in ['none']:
+            continue
         name = str(row[0].value) + " " + str(row[1].value)
         division = str(row[2].value)
         hometown = str(row[3].value)
