@@ -22,6 +22,7 @@ class Player(object):
                csaexam - Boolean for participating in the Citizenship, Sports, and Anniversary exam.
                bowl - Boolean for participating in the Bowl.
                seed - String representing seat seed. 
+               schedule - Schedule for the player. A tuple containing the name of the event and time.
     """
 
     def __init__(self, name, division, hometown, school, bee, bowl, anniversary, sande, citizen, military,
@@ -42,6 +43,7 @@ class Player(object):
         self.fqn = fqn
         self.seed = seed
         self.restriction = restriction
+        self.schedule = []
 
         if restriction is None:
             self.restriction = []

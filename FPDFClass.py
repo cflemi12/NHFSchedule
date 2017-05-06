@@ -55,9 +55,9 @@ class PDF(FPDF):
         self.set_margins(10, 10)
         self.set_line_width(.75)
         self.set_font('Helvetica', '', 16)
-        for i in range(5):
-            self.cell(95, 20, "Sample n Exam", align="C", border=1)
-            self.cell(95, 20, "Friday nn:00 am", align="C", border=1)
+        for spot in schedule:
+            self.cell(95, 20, spot[0], align="C", border=1)
+            self.cell(95, 20, spot[1], align="C", border=1)
             self.ln(20)
 
     def print_schedule(self, name, schedule):

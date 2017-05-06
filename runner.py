@@ -5,5 +5,4 @@ from Scheduler import generateplayingfield, createpdfs, doscheduling
 nhf = Tournament()
 field = generateplayingfield("practiceupdate.xlsx", nhf)
 doscheduling(field, nhf)
-count = 0
-#createpdfs(field)
+createpdfs(field)

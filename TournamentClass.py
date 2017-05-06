@@ -34,10 +34,10 @@ class Tournament(object):
             anniversaryrooms - Rooms for anniversary bee.
             sanderooms - Rooms for the sports and entertainment bee.
             citizenrooms - Rooms for the citizenship bee.
-            examroom - ExamRoom for all regular exams.
-            militaryroom - Military exam room.
-            geographyroom - Geography exam room.
-            csaroom - CSA exam room.
+            examrooms - ExamRoom for all regular exams.
+            militaryrooms - Military exam room.
+            geographyrooms - Geography exam room.
+            csarooms - CSA exam rooms.
 
     """
 
@@ -58,16 +58,19 @@ class Tournament(object):
             k = interval(start, start + 1)
             self.examschedule.append(k)
         self.militaryschedule = []
+
         times = [112, 117]
         for start in times:
             k = interval(start, start + 1)
             self.militaryschedule.append(k)
         self.geographyschedule = []
+
         times = [213, 217]
         for start in times:
             k = interval(start, start + 1)
             self.geographyschedule.append(k)
         self.csaexamschedule = []
+
         times = [116, 210]
         for start in times:
             k = interval(start, start + 1)
@@ -80,11 +83,13 @@ class Tournament(object):
             k = interval(start, start + .5)
             self.citizenschedule.append(k)
         self.sandeschedule = []
+
         times = [115.5, 209.5]
         for start in times:
             k = interval(start, start + .5)
             self.sandeschedule.append(k)
         self.anniversaryschedule = []
+
         times = [116, 210]
         for start in times:
             k = interval(start, start + .5)
@@ -110,8 +115,8 @@ class Tournament(object):
         for i in range(len(self.buzzerschedule)):
             roundrooms = []
             for j in range(MAX_ROOMS):
-                newroom = BuzzerRoom(self.buzzerschedule, i, j)
-                roundrooms.append(newroom)
+                buzzerroom = BuzzerRoom(self.buzzerschedule, i, j)
+                roundrooms.append(buzzerroom)
             self.buzzerrooms.append(roundrooms)
 
         # anniversary rooms
@@ -119,27 +124,27 @@ class Tournament(object):
         for i in range(len(self.anniversaryschedule)):
             roundrooms = []
             for j in range(MAX_ROOMS):
-                newroom = SideEventRoom("anniversary", self.anniversaryschedule, i, j)
-                roundrooms.append(newroom)
-            self.anniversaryrooms.append(newroom)
+                seroom = SideEventRoom("anniversary", self.anniversaryschedule, i, j)
+                roundrooms.append(seroom)
+            self.anniversaryrooms.append(roundrooms)
 
         # sports and enterinament rooms
         self.sanderooms = []
         for i in range(len(self.sandeschedule)):
             roundrooms = []
             for j in range(MAX_ROOMS):
-                newroom = SideEventRoom("sande", self.sandeschedule, i, j)
-                roundrooms.append(newroom)
-            self.sanderooms.append(newroom)
+                seroom = SideEventRoom("sande", self.sandeschedule, i, j)
+                roundrooms.append(seroom)
+            self.sanderooms.append(roundrooms)
 
         # citizenship bee rooms
         self.citizenrooms = []
         for i in range(len(self.citizenschedule)):
             roundrooms = []
             for j in range(MAX_ROOMS):
-                newroom = SideEventRoom("citizen", self.citizenschedule, i, j)
-                roundrooms.append(newroom)
-            self.citizenrooms.append(newroom)
+                seroom = SideEventRoom("citizen", self.citizenschedule, i, j)
+                roundrooms.append(seroom)
+            self.citizenrooms.append(roundrooms)
 
         # regular exam rooms
         self.examrooms = []
@@ -147,4 +152,24 @@ class Tournament(object):
             examroom = ExamRoom("exam", self.examschedule, i)
             self.examrooms.append(examroom)
 
-        #
+        # military exam rooms
+        self.militaryrooms = []
+        for i in range(len(self.militaryschedule)):
+            examroom = ExamRoom("military", self.militaryschedule, i)
+            self.militaryrooms.append(examroom)
+
+        # geography exam rooms
+        self.geographyrooms = []
+        for i in range(len(self.geographyschedule)):
+            examroom = ExamRoom("geography", self.geographyschedule, i)
+            self.geographyrooms.append(examroom)
+
+        # csa exam rooms
+        self.csarooms = []
+        for i in range(len(self.csaexamschedule)):
+            examroom1 = ExamRoom("cit", self.csaexamschedule, i)
+            examroom2 = ExamRoom("sports", self.csaexamschedule, i)
+            examroom3 = ExamRoom("anniversary", self.csaexamschedule, i)
+            self.csarooms.append((examroom1, examroom2, examroom3))
+
+
