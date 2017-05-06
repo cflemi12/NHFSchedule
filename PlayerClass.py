@@ -41,17 +41,17 @@ class Player(object):
         self.csaexam = csaexam
         self.fqn = fqn
         self.seed = seed
-        self.restriciton = restriction
+        self.restriction = restriction
 
         if restriction is None:
-            self.restriciton = []
+            self.restriction = []
         self.schedule = []
         if bowl:
             for period in tournament.bowlschedule:
-                self.restriciton.append(period)
+                self.restriction.append(period)
         if fqn:
             for period in tournament.fqnschedule:
-                self.restriciton.append(period)
+                self.restriction.append(period)
 
     def getinfo(self):
         """ Returns the basic information of each player in a list. """

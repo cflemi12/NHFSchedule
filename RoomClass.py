@@ -9,13 +9,18 @@ Defines a room.
 
 
 class Room(object):
+    """Room objects are representative of one room at the tournament.
+    
+        Attributes:
+            schedule - A schedule in the form of a list of intervals of the event going on in that room.
+            roomnumber - Number  representing the nth room for a given round. E.g. the 12th room of the buzzer roounds.
+            roundnumber - Number indicating its in the nth round in schedule[n].
+    """
 
-    def __init__(self, number, schedule):
+    def __init__(self, schedule, roundnumber, roomnumber=0):
         """ Initiates a room. """
 
-        self.number = number
-        self.rounds = []
-        for i in range(len(schedule)):
-            roster = {"a": None, "b": None, "c": None, "d": None, "e": None, "f": None, "g": None, "h": None, "i": None,
-                      "j": None}
-            self.rounds.append(roster)
+        self.schedule = schedule
+        self.roundnumber = roundnumber
+        self.roomnumber = roomnumber
+

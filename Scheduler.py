@@ -52,8 +52,37 @@ def generateplayingfield(info, tournament):
 
 
 def createpdfs(players):
+    """Creates PDFs."""
     for player in players:
         pdf = PDF()
         pdf.set_fill_color(30, 60, 120)
         pdf.print_schedule(player.name, player.schedule)
         pdf.output('Schedules/' + player.name + '.pdf', 'F')
+
+def doscheduling(field, tournament):
+    """Does all the heavy lifting. Makes the schedule for each student."""
+    seeds = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' , 'j']
+
+    #filter kids only doing bee
+    field = list(filter(lambda stu: stu.bee == 'yes', field))
+    bowlplayers = list(filter(lambda stu: stu.bowl == 'yes', field))
+
+    #create elementary array of seeds
+    elem = []
+    for s in seeds:
+        k = list(filter(lambda x: x.division == 'Elementary' and x.seed == s, field))
+        elem.append(k)
+
+    #create 7th grade array of seeds
+    seven = []
+    for s in seeds:
+        k = list(filter(lambda x: x.division == '7' and x.seed == s, field))
+        seven.append(k)
+
+    #create 8th grade array of seeds
+    eight = []
+    for s in seeds:
+        k = list(filter(lambda x: x.division == '8' and x.seed == s, field))
+        eight.append(k)
+
+

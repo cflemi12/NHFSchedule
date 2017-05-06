@@ -7,10 +7,9 @@ Defines a tournament set schedule.
 """
 
 from interval import interval
-from RoomClass import Room
-
-# from ExamRoomClass import ExamRoom
-# from SideEventRoomClass import SideEventRoom
+from ExamRoomClass import ExamRoom
+from BuzzerRoomClass import BuzzerRoom
+from SideEventRoomClass import SideEventRoom
 
 MAX_ROOMS = 45
 
@@ -32,9 +31,9 @@ class Tournament(object):
             bowlschedule - Intervals of bowl round times.
             fqnschedule - Intervals for family quiz night.
             buzzerrooms - Rooms for the regular history bee.
-            anniversaryroom - Rooms for anniversary bee.
-            sanderoom - Rooms for the sports and entertainment bee.
-            citizenroom - Rooms for the citizenship bee.
+            anniversaryrooms - Rooms for anniversary bee.
+            sanderooms - Rooms for the sports and entertainment bee.
+            citizenrooms - Rooms for the citizenship bee.
             examroom - ExamRoom for all regular exams.
             militaryroom - Military exam room.
             geographyroom - Geography exam room.
@@ -102,11 +101,50 @@ class Tournament(object):
         self.fqnschedule = []
         times = [118]
         for start in times:
-            k = interval(start, start + 3)
+            k = interval(start, start + 2)
             self.fqnschedule.append(k)
 
-        # initialize rooms
+        """ Initialize rooms. """
+        # start with buzzer rooms
         self.buzzerrooms = []
-        for i in range(MAX_ROOMS):
-            r = Room(i, self.buzzerschedule)
-            self.buzzerrooms.append(r)
+        for i in range(len(self.buzzerschedule)):
+            roundrooms = []
+            for j in range(MAX_ROOMS):
+                newroom = BuzzerRoom(self.buzzerschedule, i, j)
+                roundrooms.append(newroom)
+            self.buzzerrooms.append(roundrooms)
+
+        # anniversary rooms
+        self.anniversaryrooms = []
+        for i in range(len(self.anniversaryschedule)):
+            roundrooms = []
+            for j in range(MAX_ROOMS):
+                newroom = SideEventRoom("anniversary", self.anniversaryschedule, i, j)
+                roundrooms.append(newroom)
+            self.anniversaryrooms.append(newroom)
+
+        # sports and enterinament rooms
+        self.sanderooms = []
+        for i in range(len(self.sandeschedule)):
+            roundrooms = []
+            for j in range(MAX_ROOMS):
+                newroom = SideEventRoom("sande", self.sandeschedule, i, j)
+                roundrooms.append(newroom)
+            self.sanderooms.append(newroom)
+
+        # citizenship bee rooms
+        self.citizenrooms = []
+        for i in range(len(self.citizenschedule)):
+            roundrooms = []
+            for j in range(MAX_ROOMS):
+                newroom = SideEventRoom("citizen", self.citizenschedule, i, j)
+                roundrooms.append(newroom)
+            self.citizenrooms.append(newroom)
+
+        # regular exam rooms
+        self.examrooms = []
+        for i in range(len(self.examschedule)):
+            examroom = ExamRoom("exam", self.examschedule, i)
+            self.examrooms.append(examroom)
+
+        #
