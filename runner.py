@@ -10,5 +10,6 @@ field = generateplayingfield("practiceupdate.xlsx", nhf)
 doscheduling(field, nhf)
 createpdfs(field)
 
+
 t = time.time() - t0
 print "it took " + str(round(t, 2)) + " to complete"

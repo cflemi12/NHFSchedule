@@ -9,7 +9,6 @@ File that includes heavy lifting functions. Does most of the work for scheduling
 from openpyxl import load_workbook
 from PlayerClass import Player
 from FPDFClass import PDF
-import random
 
 
 def generateplayingfield(info, tournament):
@@ -65,75 +64,6 @@ def doscheduling(field, tournament):
 
     field = list(map(lambda stu: stu.schedulemil(tournament), field))
     field = list(map(lambda stu: stu.schedulegeo(tournament), field))
-
-    # filter side events
-    """
-    annplayers = list(filter(lambda stu: stu.anniversary is True, field))
-    sandeplayers = list(filter(lambda stu: stu.sande is True, field))
-    citplayers = list(filter(lambda stu: stu.citizen is True, field))
-    for player in annplayers:
-        time = random.choice(tournament.anniversaryschedule)
-        while player.overlap(time):
-            time = random.choice(tournament.anniversaryschedule)
-        event = ("Anniversary Bee", time, None)
-        player.schedule.append(event)
-        player.restriction.append(time)
-        time = random.choice(tournament.csaexamschedule)
-        while player.overlap(time):
-            time = random.choice(tournament.csaexamschedule)
-        event = ("Anniversary Exam", time, None)
-        player.schedule.append(event)
-        player.restriction.append(time)
-
-    for player in sandeplayers:
-        time = random.choice(tournament.sandeschedule)
-        while player.overlap(time):
-            time = random.choice(tournament.sandeschedule)
-        event = ("Sports and Entertainment Bee", time, None)
-        player.schedule.append(event)
-        player.restriction.append(time)
-        time = random.choice(tournament.csaexamschedule)
-        while player.overlap(time):
-            print player.schedule
-            print player.restriction
-            time = random.choice(tournament.csaexamschedule)
-        event = ("Sports and Entertainment Exam", time, None)
-        player.schedule.append(event)
-        player.restriction.append(time)
-    """
-    """
-    for player in citplayers:
-        time = random.choice(tournament.citizenschedule)
-        while time in player.restriction:
-            time = random.choice(tournament.citizenschedule)
-        event = ("Citizenship Bee", time, None)
-        player.schedule.append(event)
-        player.restriction.append(time)
-        time = random.choice(tournament.csaexamschedule)
-        while time in player.restriction:
-            print player.schedule
-            time = random.choice(tournament.csaexamschedule)
-        event = ("Citizenship Exam", time, None)
-        player.schedule.append(event)
-        player.restriction.append(time)
-    """
-
-    """
-    #create elementary array of seeds
-    elem = []
-    for s in seeds:
-        k = list(filter(lambda x: x.division == 'Elementary' and x.seed == s, field))
-        elem.append(k)
-
-    #create 7th grade array of seeds
-    seven = []
-    for s in seeds:
-        k = list(filter(lambda x: x.division == '7' and x.seed == s, field))
-        seven.append(k)
-
-    #create 8th grade array of seeds
-    eight = []
-    for s in seeds:
-        k = list(filter(lambda x: x.division == '8' and x.seed == s, field))
-        eight.append(k)
-    """
+    field = list(map(lambda stu: stu.schedulecit(tournament), field))
+    field = list(map(lambda stu: stu.schedulesae(tournament), field))
+    field = list(map(lambda stu: stu.scheduleexm(tournament), field))

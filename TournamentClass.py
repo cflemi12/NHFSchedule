@@ -58,7 +58,7 @@ class Tournament(object):
         # fill side schedule
         self.citizenschedule = list(map(lambda time: interval([time, time + .5]), [115, 209]))
         self.sandeschedule = list(map(lambda time: interval([time, time + .5]), [115.5, 209.5]))
-        self.anniversaryschedule = list(map(lambda time: interval([time, time + .5]), [116, 210]))
+        self.anniversaryschedule = list(map(lambda time: interval([time, time + .5]), [213, 213.5]))
 
         # fill bowl schedule
         self.bowlschedule = list(map(lambda time: interval([time, time + 3]), [118, 218]))

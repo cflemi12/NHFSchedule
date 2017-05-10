@@ -6,8 +6,8 @@ Class for players.
 Defines a player in the NHF.
 """
 
-from interval import interval
 import random
+
 
 class Player(object):
     """
@@ -59,7 +59,7 @@ class Player(object):
     def getinfo(self):
         """ Returns the basic information of each player in a list. """
         return [self.name, self.division, self.hometown, self.school, self.anniversary, self.sande, self.citizen,
-                self.military, self.geography, self.csaexam, self.bowl, self.seed]
+                self.military, self.geography, self.bowl, self.seed]
 
     def schedulemil(self, tournament):
         """ Schedules a player for a military exam. """
@@ -85,8 +85,51 @@ class Player(object):
         self.restriction.append(time)
         return self
 
-    def scheduleside(self, tournament):
-        """ Schedules a palyer for their side events. """
+    def schedulecit(self, tournament):
+        """ Scheduels a player for the citizenship bee. """
+        if self.citizen is False:
+            return self
+        time = random.choice(tournament.citizenschedule)
+        while self.overlap(time):
+            time = random.choice(tournament.citizenschedule)
+        event = ("Citizenship Bee", time, None)
+        self.schedule.append(event)
+        self.restriction.append(time)
+        time = random.choice(tournament.csaexamschedule)
+        while self.overlap(time):
+            time = random.choice(tournament.csaexamschedule)
+        event = ("Citizenship Exam", time, None)
+        self.schedule.append(event)
+        self.restriction.append(time)
+        return self
+
+    def schedulesae(self, tournament):
+        """ Scheduels a player for the citizenship bee. """
+        if self.sande is False:
+            return self
+        time = random.choice(tournament.sandeschedule)
+        while self.overlap(time):
+            time = random.choice(tournament.sandeschedule)
+        event = ("Sports and Entertainment Bee", time, None)
+        self.schedule.append(event)
+        self.restriction.append(time)
+        time = random.choice(tournament.csaexamschedule)
+        while self.overlap(time):
+            time = random.choice(tournament.csaexamschedule)
+        event = ("Sports and Entertainemnt Exam", time, None)
+        self.schedule.append(event)
+        self.restriction.append(time)
+        return self
+
+    def scheduleexm(self, tournament):
+        """ Schedules a bee player for an exam. """
+        time = random.choice(tournament.examschedule)
+        while self.overlap(time):
+            time = random.choice(tournament.examschedule)
+        event = ("History Bee Exam", time, None)
+        self.schedule.append(event)
+        self.restriction.append(time)
+        return self
 
     def overlap(self, event):
         """ Determines if event is in a players restriction. """
