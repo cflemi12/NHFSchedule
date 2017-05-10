@@ -9,6 +9,7 @@ File that includes heavy lifting functions. Does most of the work for scheduling
 from openpyxl import load_workbook
 from PlayerClass import Player
 from FPDFClass import PDF
+import random
 
 
 def generateplayingfield(info, tournament):
@@ -36,11 +37,10 @@ def generateplayingfield(info, tournament):
         citizen = str(row[9].value).lower() in ['yes']
         military = str(row[10].value).lower() in ['military']
         geography = str(row[11].value).lower() in ['geography']
-        csaexam = str(row[12].value).lower in ['yes']
-        fqn = str(row[13].value).lower in ['yes']
-        seed = str(row[14].value).lower()
+        fqn = str(row[12].value).lower in ['yes']
+        seed = str(row[13].value).lower()
         newplayer = Player(name, division, hometown, school, bee, bowl, anniversary, sande, citizen,
-                           military, geography, csaexam, fqn, seed, tournament)
+                           military, geography, fqn, seed, tournament)
         players.append(newplayer)
 
     # close workbook and return players
@@ -59,14 +59,66 @@ def createpdfs(players):
         pdf.print_schedule(player.name, player.schedule)
         pdf.output('Schedules/' + player.name + '.pdf', 'F')
 
+
 def doscheduling(field, tournament):
     """Does all the heavy lifting. Makes the schedule for each student."""
-    seeds = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' , 'j']
 
-    #filter kids only doing bee
-    field = list(filter(lambda stu: stu.bee == 'yes', field))
-    bowlplayers = list(filter(lambda stu: stu.bowl == 'yes', field))
+    field = list(map(lambda stu: stu.schedulemil(tournament), field))
+    field = list(map(lambda stu: stu.schedulegeo(tournament), field))
 
+    # filter side events
+    """
+    annplayers = list(filter(lambda stu: stu.anniversary is True, field))
+    sandeplayers = list(filter(lambda stu: stu.sande is True, field))
+    citplayers = list(filter(lambda stu: stu.citizen is True, field))
+    for player in annplayers:
+        time = random.choice(tournament.anniversaryschedule)
+        while player.overlap(time):
+            time = random.choice(tournament.anniversaryschedule)
+        event = ("Anniversary Bee", time, None)
+        player.schedule.append(event)
+        player.restriction.append(time)
+        time = random.choice(tournament.csaexamschedule)
+        while player.overlap(time):
+            time = random.choice(tournament.csaexamschedule)
+        event = ("Anniversary Exam", time, None)
+        player.schedule.append(event)
+        player.restriction.append(time)
+
+    for player in sandeplayers:
+        time = random.choice(tournament.sandeschedule)
+        while player.overlap(time):
+            time = random.choice(tournament.sandeschedule)
+        event = ("Sports and Entertainment Bee", time, None)
+        player.schedule.append(event)
+        player.restriction.append(time)
+        time = random.choice(tournament.csaexamschedule)
+        while player.overlap(time):
+            print player.schedule
+            print player.restriction
+            time = random.choice(tournament.csaexamschedule)
+        event = ("Sports and Entertainment Exam", time, None)
+        player.schedule.append(event)
+        player.restriction.append(time)
+    """
+    """
+    for player in citplayers:
+        time = random.choice(tournament.citizenschedule)
+        while time in player.restriction:
+            time = random.choice(tournament.citizenschedule)
+        event = ("Citizenship Bee", time, None)
+        player.schedule.append(event)
+        player.restriction.append(time)
+        time = random.choice(tournament.csaexamschedule)
+        while time in player.restriction:
+            print player.schedule
+            time = random.choice(tournament.csaexamschedule)
+        event = ("Citizenship Exam", time, None)
+        player.schedule.append(event)
+        player.restriction.append(time)
+    """
+
+    """
     #create elementary array of seeds
     elem = []
     for s in seeds:
@@ -84,5 +136,4 @@ def doscheduling(field, tournament):
     for s in seeds:
         k = list(filter(lambda x: x.division == '8' and x.seed == s, field))
         eight.append(k)
-
-
+    """

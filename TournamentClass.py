@@ -12,6 +12,7 @@ from BuzzerRoomClass import BuzzerRoom
 from SideEventRoomClass import SideEventRoom
 
 MAX_ROOMS = 45
+ROOM_RANGE = xrange(MAX_ROOMS)
 
 
 class Tournament(object):
@@ -43,133 +44,69 @@ class Tournament(object):
 
     def __init__(self):
         """ Initialize the tournament by creating the schedule and the rooms. """
-        self.buzzerschedule = []
-        times = [110, 110.5, 111, 111.5, 113, 113.5, 114, 114.5,
-                 211, 211.5, 212, 212.5, 214, 214.5, 215, 215.5, ]
-        for start in times:
-            k = interval(start, start + .5)
-            self.buzzerschedule.append(k)
+        buzztimes = [110, 110.5, 111, 111.5, 113, 113.5, 114, 114.5,
+                     211, 211.5, 212, 212.5, 214, 214.5, 215, 215.5, ]
+        self.buzzerschedule = list(map(lambda time: interval([time, time + .5]), buzztimes))
 
         # fill exam schedule
-        self.examschedule = []
-        times = [110, 111, 114, 115, 118, 119, 120,
-                 209, 211, 214, 215]
-        for start in times:
-            k = interval(start, start + 1)
-            self.examschedule.append(k)
-        self.militaryschedule = []
-
-        times = [112, 117]
-        for start in times:
-            k = interval(start, start + 1)
-            self.militaryschedule.append(k)
-        self.geographyschedule = []
-
-        times = [213, 217]
-        for start in times:
-            k = interval(start, start + 1)
-            self.geographyschedule.append(k)
-        self.csaexamschedule = []
-
-        times = [116, 210]
-        for start in times:
-            k = interval(start, start + 1)
-            self.csaexamschedule.append(k)
+        examtimes = [110, 111, 114, 115, 118, 119, 120, 209, 211, 214, 215]
+        self.examschedule = list(map(lambda time: interval([time, time + 1]), examtimes))
+        self.militaryschedule = list(map(lambda time: interval([time, time + 1]), [112, 217]))
+        self.geographyschedule = list(map(lambda time: interval([time, time + 1]), [213, 117]))
+        self.csaexamschedule = list(map(lambda time: interval([time, time + 1]), [116, 210]))
 
         # fill side schedule
-        self.citizenschedule = []
-        times = [115, 209]
-        for start in times:
-            k = interval(start, start + .5)
-            self.citizenschedule.append(k)
-        self.sandeschedule = []
-
-        times = [115.5, 209.5]
-        for start in times:
-            k = interval(start, start + .5)
-            self.sandeschedule.append(k)
-        self.anniversaryschedule = []
-
-        times = [116, 210]
-        for start in times:
-            k = interval(start, start + .5)
-            self.anniversaryschedule.append(k)
+        self.citizenschedule = list(map(lambda time: interval([time, time + .5]), [115, 209]))
+        self.sandeschedule = list(map(lambda time: interval([time, time + .5]), [115.5, 209.5]))
+        self.anniversaryschedule = list(map(lambda time: interval([time, time + .5]), [116, 210]))
 
         # fill bowl schedule
-        self.bowlschedule = []
-        times = [118, 218]
-        for start in times:
-            k = interval(start, start + 3)
-            self.bowlschedule.append(k)
+        self.bowlschedule = list(map(lambda time: interval([time, time + 3]), [118, 218]))
 
         # fill fqn schedule
-        self.fqnschedule = []
-        times = [118]
-        for start in times:
-            k = interval(start, start + 2)
-            self.fqnschedule.append(k)
+        self.fqnschedule = [interval([118, 118 + 2])]
 
         """ Initialize rooms. """
         # start with buzzer rooms
         self.buzzerrooms = []
-        for i in range(len(self.buzzerschedule)):
-            roundrooms = []
-            for j in range(MAX_ROOMS):
-                buzzerroom = BuzzerRoom(self.buzzerschedule, i, j)
-                roundrooms.append(buzzerroom)
+        for i, item in enumerate(self.buzzerschedule):
+            roundrooms = list(map(lambda j: BuzzerRoom(self.buzzerschedule, i, j), ROOM_RANGE))
             self.buzzerrooms.append(roundrooms)
 
         # anniversary rooms
         self.anniversaryrooms = []
-        for i in range(len(self.anniversaryschedule)):
-            roundrooms = []
-            for j in range(MAX_ROOMS):
-                seroom = SideEventRoom("anniversary", self.anniversaryschedule, i, j)
-                roundrooms.append(seroom)
+        for i, item in enumerate(self.anniversaryschedule):
+            roundrooms = list(map(lambda j: SideEventRoom("anniversary", self.anniversaryschedule, i, j), ROOM_RANGE))
             self.anniversaryrooms.append(roundrooms)
 
         # sports and enterinament rooms
         self.sanderooms = []
-        for i in range(len(self.sandeschedule)):
-            roundrooms = []
-            for j in range(MAX_ROOMS):
-                seroom = SideEventRoom("sande", self.sandeschedule, i, j)
-                roundrooms.append(seroom)
+        for i, item in enumerate(self.sandeschedule):
+            roundrooms = list(map(lambda j: SideEventRoom("sande", self.sandeschedule, i, j), ROOM_RANGE))
             self.sanderooms.append(roundrooms)
 
         # citizenship bee rooms
         self.citizenrooms = []
-        for i in range(len(self.citizenschedule)):
-            roundrooms = []
-            for j in range(MAX_ROOMS):
-                seroom = SideEventRoom("citizen", self.citizenschedule, i, j)
-                roundrooms.append(seroom)
+        for i, item in enumerate(self.citizenschedule):
+            roundrooms = list(map(lambda j: SideEventRoom("citizen", self.citizenschedule, i, j), ROOM_RANGE))
             self.citizenrooms.append(roundrooms)
 
         # regular exam rooms
-        self.examrooms = []
-        for i in range(len(self.examschedule)):
-            examroom = ExamRoom("exam", self.examschedule, i)
-            self.examrooms.append(examroom)
+        k = xrange(len(self.examschedule))
+        self.examrooms = list(map(lambda j: ExamRoom("exam", self.examschedule, j), k))
 
         # military exam rooms
-        self.militaryrooms = []
-        for i in range(len(self.militaryschedule)):
-            examroom = ExamRoom("military", self.militaryschedule, i)
-            self.militaryrooms.append(examroom)
+        k = xrange(len(self.militaryschedule))
+        self.militaryrooms = list(map(lambda j: ExamRoom("military", self.militaryschedule, j), k))
 
         # geography exam rooms
-        self.geographyrooms = []
-        for i in range(len(self.geographyschedule)):
-            examroom = ExamRoom("geography", self.geographyschedule, i)
-            self.geographyrooms.append(examroom)
+        k = xrange(len(self.geographyschedule))
+        self.geographyrooms = list(map(lambda j: ExamRoom("geography", self.geographyschedule, j), k))
 
         # csa exam rooms
         self.csarooms = []
-        for i in range(len(self.csaexamschedule)):
-            examroom1 = ExamRoom("cit", self.csaexamschedule, i)
-            examroom2 = ExamRoom("sports", self.csaexamschedule, i)
-            examroom3 = ExamRoom("anniversary", self.csaexamschedule, i)
-            self.csarooms.append((examroom1, examroom2, examroom3))
-
-
+        for i in xrange(len(self.csaexamschedule)):
+            cit = ExamRoom("cit", self.csaexamschedule, i)
+            sport = ExamRoom("sports", self.csaexamschedule, i)
+            ann = ExamRoom("anniversary", self.csaexamschedule, i)
+            self.csarooms.append((cit, sport, ann))

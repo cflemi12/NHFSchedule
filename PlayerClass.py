@@ -6,6 +6,8 @@ Class for players.
 Defines a player in the NHF.
 """
 
+from interval import interval
+import random
 
 class Player(object):
     """
@@ -26,7 +28,7 @@ class Player(object):
     """
 
     def __init__(self, name, division, hometown, school, bee, bowl, anniversary, sande, citizen, military,
-                 geography, csaexam, fqn, seed, tournament, restriction=None):
+                 geography, fqn, seed, tournament, restriction=None):
         """ Initiates the player. """
         self.name = name
         self.division = division
@@ -59,3 +61,40 @@ class Player(object):
         """ Returns the basic information of each player in a list. """
         return [self.name, self.division, self.hometown, self.school, self.anniversary, self.sande, self.citizen,
                 self.military, self.geography, self.csaexam, self.bowl, self.seed]
+
+    def schedulemil(self, tournament):
+        """ Schedules a player for a military exam. """
+        if self.military is False:
+            return self
+        time = random.choice(tournament.militaryschedule)
+        while self.overlap(time):
+            time = random.choice(tournament.militaryschedule)
+        event = ("Military Exam", time, None)
+        self.schedule.append(event)
+        self.restriction.append(time)
+        return self
+
+    def schedulegeo(self, tournament):
+        """ Schedules a player for a military exam. """
+        if self.geography is False:
+            return self
+        time = random.choice(tournament.geographyschedule)
+        while self.overlap(time):
+            time = random.choice(tournament.militaryschedule)
+        event = ("Geography Exam", time, None)
+        self.schedule.append(event)
+        self.restriction.append(time)
+        return self
+
+    def scheduleside(self, tournament):
+        """ Schedules a palyer for their side events. """
+
+    def overlap(self, event):
+        """ Determines if event is in a players restriction. """
+        for res in self.restriction:
+            k = res & event
+            if len(k) == 0:
+                continue
+            if k[0][1] - k[0][0] != 0:
+                return True
+        return False
