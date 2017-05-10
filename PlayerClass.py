@@ -41,7 +41,6 @@ class Player(object):
         self.citizen = citizen
         self.military = military
         self.geography = geography
-        self.csaexam = csaexam
         self.fqn = fqn
         self.seed = seed
         self.restriction = restriction
