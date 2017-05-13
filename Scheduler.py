@@ -55,7 +55,7 @@ def createpdfs(players):
     for player in players:
         pdf = PDF()
         pdf.set_fill_color(30, 60, 120)
-        pdf.print_schedule(player.name, player.schedule)
+        pdf.print_schedule(player.name, player.schedule, player.id)
         pdf.output('Schedules/' + player.name + '.pdf', 'F')
 
 

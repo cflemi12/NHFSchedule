@@ -8,6 +8,8 @@ Defines a player in the NHF.
 
 import random
 
+idchoices = list(range(10000, 99999))
+
 
 class Player(object):
     """
@@ -45,6 +47,14 @@ class Player(object):
         self.seed = seed
         self.restriction = restriction
         self.schedule = []
+        tempid = random.choice(idchoices)
+        idchoices.remove(tempid)
+        if self.division == "8":
+            self.id = int("8" + str(tempid))
+        elif self.division == "7":
+            self.id = int("7" + str(tempid))
+        else:
+            self.id = int("6" + str(tempid))
 
         if restriction is None:
             self.restriction = []
@@ -131,6 +141,9 @@ class Player(object):
         self.restriction.append(time)
         return self
 
+    def schedulebuz(self, tournament):
+        """ Schedules a player for their four buzzer rounds. """
+
     def overlap(self, event):
         """ Determines if event is in a players restriction. """
         for res in self.restriction:
@@ -140,3 +153,4 @@ class Player(object):
             if k[0][1] - k[0][0] != 0:
                 return True
         return False
+
