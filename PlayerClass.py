@@ -7,6 +7,7 @@ Defines a player in the NHF.
 """
 
 import random
+from interval import interval
 
 idchoices = list(range(10000, 99999))
 
@@ -55,6 +56,7 @@ class Player(object):
             self.id = int("7" + str(tempid))
         else:
             self.id = int("6" + str(tempid))
+        self.buzzrounds = 0
 
         if restriction is None:
             self.restriction = []
@@ -133,21 +135,70 @@ class Player(object):
 
     def scheduleexm(self, tournament):
         """ Schedules a bee player for an exam. """
+        print self.name
         time = random.choice(tournament.examschedule)
-        while self.overlap(time):
+        while self.overlapthirty(time, self.restriction):
             time = random.choice(tournament.examschedule)
         event = ("History Bee Exam", time, None)
         self.schedule.append(event)
         self.restriction.append(time)
         return self
 
-    def schedulebuz(self, tournament):
-        """ Schedules a player for their four buzzer rounds. """
+    def attemptschedulebuz(self, tournament, freq, n, schedule:
+        """ Attempt to schedule buzzer rounds. Returns a boolean, player, and schedule. """
+        # Create Temporaries
+        tempschedule = self.schedule[:]
+        temprestriction = self.restriction[:]
+        temp = schedule[:]
+
+        # Attempt first Buzz
+        time = random.choice(temp)
+        while self.overlapthirty(time, temprestriction) or freq[temp.index(time)] >= n:
+            temp.remove(time)
+            if len(temp) == 0:
+                return (False, self, tempschedule)
+            time=random.choice(temp)
+        event = ("History Bee Buzzer Round", time, None)
+        tempschedule.append(event)
+        temprestriction.append(time)
+        freq[temp.index(time)] += 1
+        if len(temp) == 0:
+            return (False, self, tempschedule)
+        time = random.choice(temp)
+        while self.overlapthirty(time, temprestriction) or freq[temp.index(time)] >= n:
+            temp.remove(time)
+            if len(temp) == 0:
+                return (False, self, tempschedule)
+            time = random.choice(temp)
+        event = ("History Bee Buzzer Round", time, None)
+        tempschedule.append(event)
+        temprestriction.append(time)
+        freq[temp.index(time)] += 1
+        return (True, self, tempschedule)
+
+    def updateschedule(self, newschedule):
+        """ Sets a player schedule given a new one and updates restrictions."""
+        self.schedule = newschedule
+        for event, time, room in self.schedule:
+            self.restriction.append(time)
 
     def overlap(self, event):
         """ Determines if event is in a players restriction. """
         for res in self.restriction:
             k = res & event
+            if len(k) == 0:
+                continue
+            if k[0][1] - k[0][0] != 0:
+                return True
+        return False
+
+    def overlapthirty(self, event, restrictions):
+        """ Determines if the event is at least 30minutes apart. """
+        for res in restrictions:
+            bot = interval([res[0][0] - 0.5, res[0][0]])
+            top = interval([res[0][1], res[0][1] + 0.5])
+            expanded = bot | res | top
+            k = expanded & event
             if len(k) == 0:
                 continue
             if k[0][1] - k[0][0] != 0:

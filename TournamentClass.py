@@ -110,3 +110,11 @@ class Tournament(object):
             sport = ExamRoom("sports", self.csaexamschedule, i)
             ann = ExamRoom("anniversary", self.csaexamschedule, i)
             self.csarooms.append((cit, sport, ann))
+
+    def scheduleexamrooms(self, field):
+        """ Fills rooms. """
+        for player in field:
+            for event in player.schedule:
+                if event[0] == "History Bee Exam":
+                    return
+

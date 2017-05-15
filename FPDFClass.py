@@ -65,7 +65,7 @@ class PDF(FPDF):
         # Page number
         self.cell(0, 10, "National History Bee", 0, 0, 'C')
 
-    def schedule_name(self, name, id):
+    def schedule_name(self, name, id, seed):
         # Arial 12
         self.set_font('Helvetica', 'B', 22)
         # Title
@@ -73,13 +73,12 @@ class PDF(FPDF):
         self.set_x((210 - w) / 2)
         self.set_line_width(1.25)
         self.cell(w, 15, name, 1, 1, 'C', 0)
-        # Line break
-        self.ln(10)
         # Fill id
         w = self.get_string_width(str(id)) + 10
         self.set_x((210 - w) / 2)
         self.set_line_width(1.25)
-        self.cell(w, 15, str(id), 1, 1, 'C', 0)
+        val = seed.upper() + "-" + str(id).upper()
+        self.cell(w, 15, val, 1, 1, 'C', 0)
         # Line break
         self.ln(10)
 
@@ -89,14 +88,15 @@ class PDF(FPDF):
         # something to do with
         self.set_margins(10, 10)
         self.set_line_width(.75)
-        self.set_font('Helvetica', '', 16)
+        self.set_font('Helvetica', '', 12)
         for spot in sorted(schedule, key=itemgetter(1)):
             time = converter(spot[1])
-            self.cell(95, 20, spot[0], align="C", border=1)
-            self.cell(95, 20, time, align="C", border=1)
+            self.cell(82, 20, spot[0], align="C", border=1)
+            self.cell(82, 20, time, align="C", border=1)
+            self.cell(25, 20, "Room N", align="C", border=1)
             self.ln(20)
 
-    def print_schedule(self, name, schedule, id):
+    def print_schedule(self, name, schedule, id, seed):
         self.add_page()
-        self.schedule_name(name, id)
+        self.schedule_name(name, id, seed)
         self.schedule_body(schedule)
