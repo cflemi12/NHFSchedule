@@ -165,12 +165,12 @@ class Player(object):
 
     def attemptschedulebuz(self, tournament, freq, n, sched, exams=False):
         """ Attempt to schedule buzzer rounds. Returns a boolean, player, and schedule. """
-        # Create Temporaries
+        # Create temps
         tempschedule = self.schedule[:]
         temprestriction = self.restriction[:]
         temp = sched[:]
 
-        # Attempt first Buzz
+        # Attempt first buzz round
         time = random.choice(temp)
         while self.overlapthirty(time, temprestriction) or freq[sched.index(time)] >= n:
             temp.remove(time)
@@ -181,6 +181,8 @@ class Player(object):
         tempschedule.append(event)
         temprestriction.append(time)
         freq[sched.index(time)] += 1
+
+        # Attempt second buzz round
         if len(temp) == 0:
             return (False, self, tempschedule)
         time = random.choice(temp)

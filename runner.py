@@ -2,7 +2,6 @@ from TournamentClass import Tournament
 from Scheduler import generateplayingfield, createpdfs, doscheduling
 import time
 from PlayerClass import *
-import sys
 
 
 def main():

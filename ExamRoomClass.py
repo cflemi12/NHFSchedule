@@ -29,3 +29,6 @@ class ExamRoom(Room):
         self.roomnumber = roomnumber
         self.schedule = schedule
         self.roster = []
+
+    def addplayer(self, player):
+        self.roster.append(player)

@@ -91,9 +91,13 @@ class PDF(FPDF):
         self.set_font('Helvetica', '', 12)
         for spot in sorted(schedule, key=itemgetter(1)):
             time = converter(spot[1])
+            print spot[2]
+            place = "Room N"
+            if spot[2] is not None:
+                place = spot[2]
             self.cell(82, 20, spot[0], align="C", border=1)
             self.cell(82, 20, time, align="C", border=1)
-            self.cell(25, 20, "Room N", align="C", border=1)
+            self.cell(25, 20, place, align="C", border=1)
             self.ln(20)
 
     def print_schedule(self, name, schedule, id, seed):

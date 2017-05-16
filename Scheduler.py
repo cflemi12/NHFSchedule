@@ -72,9 +72,11 @@ def schedulebuz(field, tournament):
         for seed in seeds:
             print "Division: " + div + ", " + "Seed: " + seed
             players = list(filter(lambda stu: (stu.division == div) & (stu.seed == seed), field))
-            signedup = [0] * 8
             tot = tots
-            attemptschedule = list(map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, friday), players))
+
+            signedup = [0] * 8
+            attemptschedule = list(
+                map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, friday), players))
             while len(filter(lambda ev: ev[0] is False, attemptschedule)) != 0:
                 signedup = [0] * 8
                 attemptschedule = list(
@@ -102,10 +104,13 @@ def doscheduling(field, tournament):
     map(lambda stu: stu.schedulecit(tournament), field)
     map(lambda stu: stu.schedulesae(tournament), field)
     print "Scheduling Buzzer rounds for..."
-    schedulebuz(field, tournament)
+    #schedulebuz(field, tournament)
     print "Scheduling Exams."
     map(lambda stu: stu.scheduleexm(tournament), field)
 
-    print "Setting Rooms."
-    # tournament.scheduleexamrooms(field)
+    print "Setting Exam Rooms."
+    tournament.scheduleexamrooms(field)
+    print "Setting Side Event Rooms."
+    # tournament.schedulesiderooms(field)
+    print "Setting Buzzer Rooms."
     # tournament.schedulebuzzerrooms(field)

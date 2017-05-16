@@ -112,9 +112,27 @@ class Tournament(object):
             self.csarooms.append((cit, sport, ann))
 
     def scheduleexamrooms(self, field):
-        """ Fills rooms. """
+        """ Fills exam rooms. """
+        # regular exams
         for player in field:
             for event in player.schedule:
                 if event[0] == "History Bee Exam":
-                    return
+                    self.examrooms[self.examschedule.index(event[1])].addplayer(player)
+                    event = (event[0], event[1], "Exam Room")
+
+        # geography exams
+        for player in field:
+            for event in player.schedule:
+                if event[0] == "Geography Exam":
+                    self.geographyrooms[self.geographyschedule.index(event[1])].addplayer(player)
+                    event = (event[0], event[1], "Exam Room")
+
+        # military exams
+        for player in field:
+            for event in player.schedule:
+                if event[0] == "Military Exam":
+                    self.militaryrooms[self.militaryschedule.index(event[1])].addplayer(player)
+                    event = (event[0], event[1], "Exam Room")
+
+
 
