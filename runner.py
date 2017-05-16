@@ -5,7 +5,6 @@ from PlayerClass import *
 
 
 def main():
-
     # reset unaccounted parameter
     zerocount()
     # initialize a new tournament
@@ -16,6 +15,7 @@ def main():
 
     # do it until there are no kids left unaccoutned
     while getcount() != 0:
+        print "Failed configuration."
         zerocount()
         # initialize a new tournament
         nhf = Tournament()
@@ -23,8 +23,9 @@ def main():
         # schedule field in tournament
         doscheduling(field, nhf)
 
+    print "Good configuration."
     # generate PDFs
-    #createpdfs(field)
+    createpdfs(field)
 
 
 if __name__ == "__main__":
@@ -33,4 +34,5 @@ if __name__ == "__main__":
     main()
     # calculate length
     t = time.time() - t0
-    print "it took " + str(round(t, 2)) + " to complete"
+    print "Done."
+    print "it took " + str(round(t, 2)) + " to complete."

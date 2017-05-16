@@ -7,8 +7,9 @@ Defines a tournament set schedule.
 """
 
 from interval import interval
-from ExamRoomClass import ExamRoom
+
 from BuzzerRoomClass import BuzzerRoom
+from ExamRoomClass import ExamRoom
 from SideEventRoomClass import SideEventRoom
 
 MAX_ROOMS = 45
@@ -108,8 +109,7 @@ class Tournament(object):
         for i in xrange(len(self.csaexamschedule)):
             cit = ExamRoom("cit", self.csaexamschedule, i)
             sport = ExamRoom("sports", self.csaexamschedule, i)
-            ann = ExamRoom("anniversary", self.csaexamschedule, i)
-            self.csarooms.append((cit, sport, ann))
+            self.csarooms.append((cit, sport))
 
     def scheduleexamrooms(self, field):
         """ Fills exam rooms. """
@@ -136,8 +136,22 @@ class Tournament(object):
 
     def schedulesiderooms(self, field):
         sande = list(filter(lambda stu: stu.sande, field))
-        cit  = list(filter(lambda stu: stu.citizen, field))
+        cit = list(filter(lambda stu: stu.citizen, field))
 
+        poolsande = [[] for _ in self.sandeschedule]
+        for player in sande:
+            for event in player.schedule:
+                if event[0] == "Sports and Entertainment Bee":
+                    poolsande[self.sandeschedule.index(event[1])].append(player)
+                if event[0] == "Sports and Entertainemnt Exam":
+                    self.csarooms[self.csaexamschedule.index(event[1])][1].addplayer(player)
+                    event[2] = "Exam Room"
 
-
-
+        poolcit = [[] for _ in self.citizenschedule]
+        for player in cit:
+            for event in player.schedule:
+                if event[0] == "Citizenship Bee":
+                    poolcit[self.citizenschedule.index(event[1])].append(player)
+                if event[0] == "Citizenship Exam":
+                    self.csarooms[self.csaexamschedule.index(event[1])][0].addplayer(player)
+                    event[2] = "Exam Room"

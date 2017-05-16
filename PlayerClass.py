@@ -7,6 +7,7 @@ Defines a player in the NHF.
 """
 
 import random
+
 from interval import interval
 
 idchoices = list(range(10000, 99999))
@@ -43,7 +44,9 @@ class Player(object):
 
     def __init__(self, name, division, hometown, school, bee, bowl, anniversary, sande, citizen, military,
                  geography, fqn, seed, tournament, restriction=None):
-        """ Initiates the player. """
+        """ Initiates the player. 
+        :type restriction: a set of intervals which the player cannot play
+        """
         self.name = name
         self.division = division
         self.hometown = hometown
@@ -146,16 +149,15 @@ class Player(object):
 
     def scheduleexm(self, tournament):
         """ Schedules a bee player for an exam. """
+        if self.bee is not True:
+            return self
         temp = tournament.examschedule[:]
         time = random.choice(temp)
-        while self.overlapthirty(time, self.restriction):
+        while overlapthirty(time, self.restriction):
             temp.remove(time)
             if len(temp) == 0:
-                print "*****************************************"
-                print self.name
                 global count
                 count += 1
-                print count
                 return self
             time = random.choice(temp)
         event = ["History Bee Exam", time, None]
@@ -163,7 +165,7 @@ class Player(object):
         self.restriction.append(time)
         return self
 
-    def attemptschedulebuz(self, tournament, freq, n, sched, exams=False):
+    def attemptschedulebuz(self, freq, n, sched):
         """ Attempt to schedule buzzer rounds. Returns a boolean, player, and schedule. """
         # Create temps
         tempschedule = self.schedule[:]
@@ -172,10 +174,10 @@ class Player(object):
 
         # Attempt first buzz round
         time = random.choice(temp)
-        while self.overlapthirty(time, temprestriction) or freq[sched.index(time)] >= n:
+        while overlapthirty(time, temprestriction) or freq[sched.index(time)] >= n:
             temp.remove(time)
             if len(temp) == 0:
-                return (False, self, tempschedule)
+                return False, self, tempschedule
             time = random.choice(temp)
         event = ["History Bee Buzzer Round", time, None]
         tempschedule.append(event)
@@ -184,19 +186,19 @@ class Player(object):
 
         # Attempt second buzz round
         if len(temp) == 0:
-            return (False, self, tempschedule)
+            return False, self, tempschedule
         time = random.choice(temp)
-        while self.overlapthirty(time, temprestriction) or freq[sched.index(time)] >= n:
+        while overlapthirty(time, temprestriction) or freq[sched.index(time)] >= n:
             temp.remove(time)
             if len(temp) == 0:
-                return (False, self, tempschedule)
+                return False, self, tempschedule
             time = random.choice(temp)
         event = ["History Bee Buzzer Round", time, None]
         tempschedule.append(event)
         temprestriction.append(time)
         freq[sched.index(time)] += 1
 
-        return (True, self, tempschedule)
+        return True, self, tempschedule
 
     def updateschedule(self, newschedule):
         """ Sets a player schedule given a new one and updates restrictions."""
@@ -214,15 +216,16 @@ class Player(object):
                 return True
         return False
 
-    def overlapthirty(self, event, restrictions):
-        """ Determines if the event is at least 30minutes apart. """
-        for res in restrictions:
-            bot = interval([res[0][0] - 0.5, res[0][0]])
-            top = interval([res[0][1], res[0][1] + 0.5])
-            expanded = bot | res | top
-            k = expanded & event
-            if len(k) == 0:
-                continue
-            if k[0][1] - k[0][0] != 0:
-                return True
-        return False
+
+def overlapthirty(event, restrictions):
+    """ Determines if the event is at least 30minutes apart. """
+    for res in restrictions:
+        bot = interval([res[0][0] - 0.5, res[0][0]])
+        top = interval([res[0][1], res[0][1] + 0.5])
+        expanded = bot | res | top
+        k = expanded & event
+        if len(k) == 0:
+            continue
+        if k[0][1] - k[0][0] != 0:
+            return True
+    return False

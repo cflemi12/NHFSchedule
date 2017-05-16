@@ -10,6 +10,7 @@ from operator import itemgetter
 
 title = "Schedule"
 
+
 def converter(interval):
     times = {110.0: "10:00 am", 110.5: "10:30 am", 111.0: "11:00 am", 111.5: "11:30 am", 112.0: "12:00 pm",
              112.5: "12:30 pm", 113.0: "1:00 pm", 113.5: "1:30 pm", 114.0: "2:00 pm", 114.5: "2:30 pm",
@@ -35,8 +36,6 @@ def converter(interval):
     return datestring
 
 
-
-
 class PDF(FPDF):
     def header(self):
         # logo
@@ -51,7 +50,7 @@ class PDF(FPDF):
         # Title
         self.cell(w, 39, title, 0, 1, 'C', 0)
         # Line break
-        self.ln(1)
+        # self.ln(1)
 
     def footer(self):
         # Position at 1.5 cm from bottom
@@ -65,7 +64,7 @@ class PDF(FPDF):
         # Page number
         self.cell(0, 10, "National History Bee", 0, 0, 'C')
 
-    def schedule_name(self, name, id, seed):
+    def schedule_name(self, name, uid, seed):
         # Arial 12
         self.set_font('Helvetica', 'B', 22)
         # Title
@@ -74,14 +73,13 @@ class PDF(FPDF):
         self.set_line_width(1.25)
         self.cell(w, 15, name, 1, 1, 'C', 0)
         # Fill id
-        w = self.get_string_width(str(id)) + 10
+        val = seed.upper() + "-" + str(uid).upper()
+        w = self.get_string_width(val) + 10
         self.set_x((210 - w) / 2)
         self.set_line_width(1.25)
-        val = seed.upper() + "-" + str(id).upper()
         self.cell(w, 15, val, 1, 1, 'C', 0)
         # Line break
-        self.ln(10)
-
+        self.ln(5)
 
     def schedule_body(self, schedule):
         # add schedule to pdf
@@ -95,12 +93,12 @@ class PDF(FPDF):
             place = "N/A"
             if spot[2] is not None:
                 place = spot[2]
-            self.cell(82, 20, eventtitle, align="C", border=1)
-            self.cell(82, 20, time, align="C", border=1)
-            self.cell(25, 20, place, align="C", border=1)
+            self.cell(80, 20, eventtitle, align="C", border=1)
+            self.cell(80, 20, time, align="C", border=1)
+            self.cell(30, 20, place, align="C", border=1)
             self.ln(20)
 
-    def print_schedule(self, name, schedule, id, seed):
+    def print_schedule(self, name, schedule, uid, seed):
         self.add_page()
-        self.schedule_name(name, id, seed)
+        self.schedule_name(name, uid, seed)
         self.schedule_body(schedule)

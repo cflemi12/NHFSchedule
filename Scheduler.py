@@ -12,11 +12,13 @@ from FPDFClass import PDF
 
 
 def generateplayingfield(info, tournament):
-    """Generates the playing field given the raw data.
+    """
+    Generates the playing field given the raw data.
     Gets passed the file name and the tournament.
     """
 
     # load workbook data
+    print "Loading workbook data."
     players = []
     wb = load_workbook(info, read_only=True, data_only=True)
     ws = wb.active
@@ -62,6 +64,7 @@ def createpdfs(players):
 
 def schedulebuz(field, tournament):
     """ Schedules the buzzer portion to the """
+    field = list(filter(lambda stu: stu.bee, field))
     seeds = [seed for seed in "abcdefghij"]
     divisions = ['8', '7', "Elementary"]
     friday = tournament.buzzerschedule[0:8]
@@ -76,20 +79,20 @@ def schedulebuz(field, tournament):
 
             signedup = [0] * 8
             attemptschedule = list(
-                map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, friday), players))
+                map(lambda stu: stu.attemptschedulebuz(signedup, tot, friday), players))
             while len(filter(lambda ev: ev[0] is False, attemptschedule)) != 0:
                 signedup = [0] * 8
                 attemptschedule = list(
-                    map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, friday), players))
+                    map(lambda stu: stu.attemptschedulebuz(signedup, tot, friday), players))
             for attempt, player, schedule in attemptschedule:
                 player.updateschedule(schedule)
 
             attemptschedule = list(
-                map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, saturday), players))
+                map(lambda stu: stu.attemptschedulebuz(signedup, tot, saturday), players))
             while len(filter(lambda ev: ev[0] is False, attemptschedule)) != 0:
                 signedup = [0] * 8
                 attemptschedule = list(
-                    map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, saturday), players))
+                    map(lambda stu: stu.attemptschedulebuz(signedup, tot, saturday), players))
             for attempt, player, schedule in attemptschedule:
                 player.updateschedule(schedule)
 
@@ -104,7 +107,7 @@ def doscheduling(field, tournament):
     map(lambda stu: stu.schedulecit(tournament), field)
     map(lambda stu: stu.schedulesae(tournament), field)
     print "Scheduling Buzzer rounds for..."
-    #schedulebuz(field, tournament)
+    # schedulebuz(field, tournament)
     print "Scheduling Exams."
     map(lambda stu: stu.scheduleexm(tournament), field)
 
