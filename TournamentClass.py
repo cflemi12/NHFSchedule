@@ -118,21 +118,26 @@ class Tournament(object):
             for event in player.schedule:
                 if event[0] == "History Bee Exam":
                     self.examrooms[self.examschedule.index(event[1])].addplayer(player)
-                    event = (event[0], event[1], "Exam Room")
+                    event[2] = "Exam Room"
 
         # geography exams
         for player in field:
             for event in player.schedule:
                 if event[0] == "Geography Exam":
                     self.geographyrooms[self.geographyschedule.index(event[1])].addplayer(player)
-                    event = (event[0], event[1], "Exam Room")
+                    event[2] = "Exam Room"
 
         # military exams
         for player in field:
             for event in player.schedule:
                 if event[0] == "Military Exam":
                     self.militaryrooms[self.militaryschedule.index(event[1])].addplayer(player)
-                    event = (event[0], event[1], "Exam Room")
+                    event[2] = "Exam Room"
+
+    def schedulesiderooms(self, field):
+        sande = list(filter(lambda stu: stu.sande, field))
+        cit  = list(filter(lambda stu: stu.citizen, field))
+
 
 
 

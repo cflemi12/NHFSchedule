@@ -90,12 +90,12 @@ class PDF(FPDF):
         self.set_line_width(.75)
         self.set_font('Helvetica', '', 12)
         for spot in sorted(schedule, key=itemgetter(1)):
+            eventtitle = spot[0]
             time = converter(spot[1])
-            print spot[2]
-            place = "Room N"
+            place = "N/A"
             if spot[2] is not None:
                 place = spot[2]
-            self.cell(82, 20, spot[0], align="C", border=1)
+            self.cell(82, 20, eventtitle, align="C", border=1)
             self.cell(82, 20, time, align="C", border=1)
             self.cell(25, 20, place, align="C", border=1)
             self.ln(20)

@@ -91,7 +91,7 @@ class Player(object):
         time = random.choice(tournament.militaryschedule)
         while self.overlap(time):
             time = random.choice(tournament.militaryschedule)
-        event = ("Military Exam", time, None)
+        event = ["Military Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
@@ -103,7 +103,7 @@ class Player(object):
         time = random.choice(tournament.geographyschedule)
         while self.overlap(time):
             time = random.choice(tournament.militaryschedule)
-        event = ("Geography Exam", time, None)
+        event = ["Geography Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
@@ -115,13 +115,13 @@ class Player(object):
         time = random.choice(tournament.citizenschedule)
         while self.overlap(time):
             time = random.choice(tournament.citizenschedule)
-        event = ("Citizenship Bee", time, None)
+        event = ["Citizenship Bee", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         time = random.choice(tournament.csaexamschedule)
         while self.overlap(time):
             time = random.choice(tournament.csaexamschedule)
-        event = ("Citizenship Exam", time, None)
+        event = ["Citizenship Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
@@ -133,13 +133,13 @@ class Player(object):
         time = random.choice(tournament.sandeschedule)
         while self.overlap(time):
             time = random.choice(tournament.sandeschedule)
-        event = ("Sports and Entertainment Bee", time, None)
+        event = ["Sports and Entertainment Bee", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         time = random.choice(tournament.csaexamschedule)
         while self.overlap(time):
             time = random.choice(tournament.csaexamschedule)
-        event = ("Sports and Entertainemnt Exam", time, None)
+        event = ["Sports and Entertainemnt Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
@@ -158,7 +158,7 @@ class Player(object):
                 print count
                 return self
             time = random.choice(temp)
-        event = ("History Bee Exam", time, None)
+        event = ["History Bee Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
@@ -177,7 +177,7 @@ class Player(object):
             if len(temp) == 0:
                 return (False, self, tempschedule)
             time = random.choice(temp)
-        event = ("History Bee Buzzer Round", time, None)
+        event = ["History Bee Buzzer Round", time, None]
         tempschedule.append(event)
         temprestriction.append(time)
         freq[sched.index(time)] += 1
@@ -191,7 +191,7 @@ class Player(object):
             if len(temp) == 0:
                 return (False, self, tempschedule)
             time = random.choice(temp)
-        event = ("History Bee Buzzer Round", time, None)
+        event = ["History Bee Buzzer Round", time, None]
         tempschedule.append(event)
         temprestriction.append(time)
         freq[sched.index(time)] += 1

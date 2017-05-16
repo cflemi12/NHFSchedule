@@ -111,6 +111,6 @@ def doscheduling(field, tournament):
     print "Setting Exam Rooms."
     tournament.scheduleexamrooms(field)
     print "Setting Side Event Rooms."
-    # tournament.schedulesiderooms(field)
+    tournament.schedulesiderooms(field)
     print "Setting Buzzer Rooms."
     # tournament.schedulebuzzerrooms(field)

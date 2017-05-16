@@ -24,7 +24,7 @@ def main():
         doscheduling(field, nhf)
 
     # generate PDFs
-    createpdfs(field)
+    #createpdfs(field)
 
 
 if __name__ == "__main__":
