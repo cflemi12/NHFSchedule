@@ -9,8 +9,6 @@ File that includes heavy lifting functions. Does most of the work for scheduling
 from openpyxl import load_workbook
 from PlayerClass import Player
 from FPDFClass import PDF
-import random
-import threading
 
 
 def generateplayingfield(info, tournament):
@@ -54,6 +52,7 @@ def generateplayingfield(info, tournament):
 
 def createpdfs(players):
     """Creates PDFs."""
+    print "Creating PDFs."
     for player in players:
         pdf = PDF()
         pdf.set_fill_color(30, 60, 120)
@@ -63,12 +62,13 @@ def createpdfs(players):
 
 def schedulebuz(field, tournament):
     """ Schedules the buzzer portion to the """
-    seeds = [let for let in "abcdefghij"]
+    seeds = [seed for seed in "abcdefghij"]
     divisions = ['8', '7', "Elementary"]
     friday = tournament.buzzerschedule[0:8]
     saturday = tournament.buzzerschedule[8:]
-    zip1 = zip(divisions, [12, 9 ,11])
-    for div, tots in zip1:
+    divisiontotals = zip(divisions, [12, 9, 11])
+
+    for div, tots in divisiontotals:
         for seed in seeds:
             print "Division: " + div + ", " + "Seed: " + seed
             players = list(filter(lambda stu: (stu.division == div) & (stu.seed == seed), field))
@@ -77,14 +77,17 @@ def schedulebuz(field, tournament):
             attemptschedule = list(map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, friday), players))
             while len(filter(lambda ev: ev[0] is False, attemptschedule)) != 0:
                 signedup = [0] * 8
-                attemptschedule = list(map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, friday), players))
+                attemptschedule = list(
+                    map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, friday), players))
             for attempt, player, schedule in attemptschedule:
                 player.updateschedule(schedule)
 
-            attemptschedule = list(map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, saturday), players))
+            attemptschedule = list(
+                map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, saturday), players))
             while len(filter(lambda ev: ev[0] is False, attemptschedule)) != 0:
                 signedup = [0] * 8
-                attemptschedule = list(map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, saturday), players))
+                attemptschedule = list(
+                    map(lambda stu: stu.attemptschedulebuz(tournament, signedup, tot, saturday), players))
             for attempt, player, schedule in attemptschedule:
                 player.updateschedule(schedule)
 
@@ -92,18 +95,17 @@ def schedulebuz(field, tournament):
 def doscheduling(field, tournament):
     """Does all the heavy lifting. Makes the schedule for each student."""
     print "Scheduling Military Exams."
-    field = list(map(lambda stu: stu.schedulemil(tournament), field))
+    map(lambda stu: stu.schedulemil(tournament), field)
     print "Scheduling Geography Exams."
-    field = list(map(lambda stu: stu.schedulegeo(tournament), field))
+    map(lambda stu: stu.schedulegeo(tournament), field)
     print "Scheduling Side Events."
-    field = list(map(lambda stu: stu.schedulecit(tournament), field))
-    field = list(map(lambda stu: stu.schedulesae(tournament), field))
-    print "Scheduling Buzzer and Exam rounds for..."
+    map(lambda stu: stu.schedulecit(tournament), field)
+    map(lambda stu: stu.schedulesae(tournament), field)
+    print "Scheduling Buzzer rounds for..."
     schedulebuz(field, tournament)
-    field = list(map(lambda stu: stu.scheduleexm(tournament), field))
+    print "Scheduling Exams."
+    map(lambda stu: stu.scheduleexm(tournament), field)
 
-    #tournament.scheduleexamrooms(field)
-    #tournament.schedulebuzzerrooms(field)
-
-
-
+    print "Setting Rooms."
+    # tournament.scheduleexamrooms(field)
+    # tournament.schedulebuzzerrooms(field)

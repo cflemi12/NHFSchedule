@@ -10,6 +10,17 @@ import random
 from interval import interval
 
 idchoices = list(range(10000, 99999))
+count = 0
+
+
+def getcount():
+    global count
+    return count
+
+
+def zerocount():
+    global count
+    count = 0
 
 
 class Player(object):
@@ -135,37 +146,33 @@ class Player(object):
 
     def scheduleexm(self, tournament):
         """ Schedules a bee player for an exam. """
-        print self.name
-        time = random.choice(tournament.examschedule)
+        temp = tournament.examschedule[:]
+        time = random.choice(temp)
         while self.overlapthirty(time, self.restriction):
-            time = random.choice(tournament.examschedule)
+            temp.remove(time)
+            if len(temp) == 0:
+                print "*****************************************"
+                print self.name
+                global count
+                count += 1
+                print count
+                return self
+            time = random.choice(temp)
         event = ("History Bee Exam", time, None)
         self.schedule.append(event)
         self.restriction.append(time)
         return self
 
-    def attemptschedulebuz(self, tournament, freq, n, schedule:
+    def attemptschedulebuz(self, tournament, freq, n, sched, exams=False):
         """ Attempt to schedule buzzer rounds. Returns a boolean, player, and schedule. """
         # Create Temporaries
         tempschedule = self.schedule[:]
         temprestriction = self.restriction[:]
-        temp = schedule[:]
+        temp = sched[:]
 
         # Attempt first Buzz
         time = random.choice(temp)
-        while self.overlapthirty(time, temprestriction) or freq[temp.index(time)] >= n:
-            temp.remove(time)
-            if len(temp) == 0:
-                return (False, self, tempschedule)
-            time=random.choice(temp)
-        event = ("History Bee Buzzer Round", time, None)
-        tempschedule.append(event)
-        temprestriction.append(time)
-        freq[temp.index(time)] += 1
-        if len(temp) == 0:
-            return (False, self, tempschedule)
-        time = random.choice(temp)
-        while self.overlapthirty(time, temprestriction) or freq[temp.index(time)] >= n:
+        while self.overlapthirty(time, temprestriction) or freq[sched.index(time)] >= n:
             temp.remove(time)
             if len(temp) == 0:
                 return (False, self, tempschedule)
@@ -173,7 +180,20 @@ class Player(object):
         event = ("History Bee Buzzer Round", time, None)
         tempschedule.append(event)
         temprestriction.append(time)
-        freq[temp.index(time)] += 1
+        freq[sched.index(time)] += 1
+        if len(temp) == 0:
+            return (False, self, tempschedule)
+        time = random.choice(temp)
+        while self.overlapthirty(time, temprestriction) or freq[sched.index(time)] >= n:
+            temp.remove(time)
+            if len(temp) == 0:
+                return (False, self, tempschedule)
+            time = random.choice(temp)
+        event = ("History Bee Buzzer Round", time, None)
+        tempschedule.append(event)
+        temprestriction.append(time)
+        freq[sched.index(time)] += 1
+
         return (True, self, tempschedule)
 
     def updateschedule(self, newschedule):
@@ -204,4 +224,3 @@ class Player(object):
             if k[0][1] - k[0][0] != 0:
                 return True
         return False
-
