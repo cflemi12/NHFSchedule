@@ -29,3 +29,7 @@ class BuzzerRoom(Room):
         self.schedule = schedule
         self.roster = {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None,
                        'h': None, 'i': None, 'j': None}
+
+    def addplayer(self, player):
+        """ Adds a player to the roster. """
+        self.roster[player.seed] = player

@@ -11,7 +11,6 @@ def main():
     nhf = Tournament()
     originalfield = generateplayingfield("practiceupdate2.xlsx", nhf)
     field = copy.deepcopy(originalfield)
-
     # schedule field in tournament
     doscheduling(field, nhf)
 

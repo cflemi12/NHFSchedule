@@ -7,10 +7,12 @@ Defines a tournament set schedule.
 """
 
 from interval import interval
-
 from BuzzerRoomClass import BuzzerRoom
 from ExamRoomClass import ExamRoom
 from SideEventRoomClass import SideEventRoom
+from math import ceil, floor
+from random import sample
+from operator import itemgetter
 
 MAX_ROOMS = 40
 ROOM_RANGE = xrange(MAX_ROOMS)
@@ -112,7 +114,7 @@ class Tournament(object):
             self.csarooms.append((cit, sport))
 
     def scheduleexamrooms(self, field):
-        """ Fills exam rooms. """
+        """ Assigns field to exam rooms. """
         # regular exams
         for player in field:
             for event in player.schedule:
@@ -135,9 +137,11 @@ class Tournament(object):
                     event[2] = "Exam Room"
 
     def schedulesiderooms(self, field):
+        """ Assigns field to side event rooms. """
         sande = list(filter(lambda stu: stu.sande, field))
         cit = list(filter(lambda stu: stu.citizen, field))
 
+        # creates pools of players for sports and entertainemnt
         poolsande = [[] for _ in self.sandeschedule]
         for player in sande:
             for event in player.schedule:
@@ -147,6 +151,26 @@ class Tournament(object):
                     self.csarooms[self.csaexamschedule.index(event[1])][1].addplayer(player)
                     event[2] = "Exam Room"
 
+        # divides pool
+        eig1 = list(filter(lambda stu: stu.division == '8', poolsande[0]))
+        eig2 = list(filter(lambda stu: stu.division == '8', poolsande[1]))
+        sev1 = list(filter(lambda stu: stu.division == '7', poolsande[0]))
+        sev2 = list(filter(lambda stu: stu.division == '7', poolsande[1]))
+        elm1 = list(filter(lambda stu: stu.division == 'Elementary', poolsande[0]))
+        elm2 = list(filter(lambda stu: stu.division == 'Elementary', poolsande[1]))
+
+        # puts players into rooms
+        rn = [40]
+        self.sideroomhelp(rn, eig1, self.sanderooms[0])
+        self.sideroomhelp(rn, sev1, self.sanderooms[0])
+        self.sideroomhelp(rn, elm1, self.sanderooms[0])
+
+        rn = [40]
+        self.sideroomhelp(rn, eig2, self.sanderooms[1])
+        self.sideroomhelp(rn, sev2, self.sanderooms[1])
+        self.sideroomhelp(rn, elm2, self.sanderooms[1])
+
+        # create pools of players for citizenship bee
         poolcit = [[] for _ in self.citizenschedule]
         for player in cit:
             for event in player.schedule:
@@ -155,3 +179,66 @@ class Tournament(object):
                 if event[0] == "Citizenship Exam":
                     self.csarooms[self.csaexamschedule.index(event[1])][0].addplayer(player)
                     event[2] = "Exam Room"
+
+        # divides pool
+        eig1 = list(filter(lambda stu: stu.division == '8', poolcit[0]))
+        eig2 = list(filter(lambda stu: stu.division == '8', poolcit[1]))
+        sev1 = list(filter(lambda stu: stu.division == '7', poolcit[0]))
+        sev2 = list(filter(lambda stu: stu.division == '7', poolcit[1]))
+        elm1 = list(filter(lambda stu: stu.division == 'Elementary', poolcit[0]))
+        elm2 = list(filter(lambda stu: stu.division == 'Elementary', poolcit[1]))
+
+        # puts players into rooms
+        rn = [40]
+        self.sideroomhelp(rn, eig1, self.citizenrooms[0])
+        self.sideroomhelp(rn, sev1, self.citizenrooms[0])
+        self.sideroomhelp(rn, elm1, self.citizenrooms[0])
+
+        rn = [40]
+        self.sideroomhelp(rn, eig2, self.citizenrooms[1])
+        self.sideroomhelp(rn, sev2, self.citizenrooms[1])
+        self.sideroomhelp(rn, elm2, self.citizenrooms[1])
+
+    def schedulebuzzerrooms(self, field):
+        """ Assigns field to buzzerrooms."""
+        seeds = [seed for seed in "abcdefghij"]
+        divisions = ["8", "7", "Elementary"]
+        field = list(filter(lambda stu: stu.bee is True, field))
+        for player in field:
+            player.schedule = list(sorted(player.schedule, key=itemgetter(1)))
+
+        playersperround = [[] for _ in range(len(self.buzzerschedule))]
+        for i, time in enumerate(self.buzzerschedule, 0):
+            for player in field:
+                for event in player.schedule:
+                    if time in event:
+                        playersperround[i].append(player)
+
+        count = 0
+        for j, rounds in enumerate(playersperround, 0):
+            roomcounter = 0
+            for div in divisions:
+                for seed in seeds:
+                    tosched = list(filter(lambda stu: stu.division == div and stu.seed == seed, playersperround[j]))
+                    count += len(tosched)
+        print count
+
+    @staticmethod
+    def sideroomhelp(roomnum, players, rooms):
+        """ Helps schedule the side events by calculating the amount of players."""
+        numrooms = ceil(len(players) / 10.0)
+        mod = len(players) % int(numrooms)
+        freq = [int(floor(len(players) / numrooms))] * int(numrooms)
+        for i in range(mod):
+            freq[i] += 1
+        for num in freq:
+            toadd = sample(players, num)
+            for player in toadd:
+                players.remove(player)
+                rooms[roomnum[0] - 1].addplayer(player)
+                for event in player.schedule:
+                    if event[0] == "Sports and Entertainment Bee":
+                        event[2] = "Room " + str(roomnum[0])
+                    if event[0] == "Citizenship Bee":
+                        event[2] = "Room " + str(roomnum[0])
+            roomnum[0] -= 1

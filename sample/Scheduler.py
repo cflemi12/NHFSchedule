@@ -101,20 +101,20 @@ def schedulebuz(field, tournament):
 def doscheduling(field, tournament):
     """Does all the heavy lifting. Makes the schedule for each student."""
     print "Scheduling Military Exams."
-    map(lambda stu: stu.schedulemil(tournament), field)
+    #map(lambda stu: stu.schedulemil(tournament), field)
     print "Scheduling Geography Exams."
-    map(lambda stu: stu.schedulegeo(tournament), field)
+    #map(lambda stu: stu.schedulegeo(tournament), field)
     print "Scheduling Side Events."
-    map(lambda stu: stu.schedulecit(tournament), field)
-    map(lambda stu: stu.schedulesae(tournament), field)
+    #map(lambda stu: stu.schedulecit(tournament), field)
+    #map(lambda stu: stu.schedulesae(tournament), field)
     print "Scheduling Buzzer rounds for..."
-    #schedulebuz(field, tournament)
+    schedulebuz(field, tournament)
     print "Scheduling Exams."
-    map(lambda stu: stu.scheduleexm(tournament), field)
+    #map(lambda stu: stu.scheduleexm(tournament), field)
 
     print "Setting Exam Rooms."
-    tournament.scheduleexamrooms(field)
+    #tournament.scheduleexamrooms(field)
     print "Setting Side Event Rooms."
-    tournament.schedulesiderooms(field)
+    #tournament.schedulesiderooms(field)
     print "Setting Buzzer Rooms."
-    # tournament.schedulebuzzerrooms(field)
+    tournament.schedulebuzzerrooms(field)
