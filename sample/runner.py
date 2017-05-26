@@ -1,16 +1,20 @@
 from TournamentClass import Tournament
-from Scheduler import generateplayingfield, createpdfs, doscheduling
+from Scheduler import generateplayingfield, createpdfs, doscheduling, createscoresheets, createmasters
 import time
 import PlayerClass
 import copy
+from shutil import copy2
+from openpyxl import load_workbook
+
 
 
 def main():
 
     # initialize a new tournament
     nhf = Tournament()
-    originalfield = generateplayingfield("practiceupdate2.xlsx", nhf)
+    originalfield = generateplayingfield("Final.xlsx", nhf)
     field = copy.deepcopy(originalfield)
+
     # schedule field in tournament
     doscheduling(field, nhf)
 
@@ -30,8 +34,15 @@ def main():
 
     print "Good configuration."
 
+
     # generate PDFs
     createpdfs(field)
+
+    # create scoresheets
+    createscoresheets(nhf)
+
+    # create master schedules
+    createmasters(nhf)
 
 
 if __name__ == "__main__":

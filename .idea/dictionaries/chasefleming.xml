@@ -15,11 +15,15 @@
       <w>chasefleming</w>
       <w>citizenrooms</w>
       <w>citizenschedule</w>
+      <w>citzenship</w>
+      <w>createmasters</w>
       <w>createpdfs</w>
+      <w>createscoresheets</w>
       <w>csaexam</w>
       <w>csaexamschedule</w>
       <w>csarooms</w>
       <w>datestring</w>
+      <w>divforround</w>
       <w>divisiontotals</w>
       <w>doscheduling</w>
       <w>enterinament</w>
@@ -40,13 +44,19 @@
       <w>newplay</w>
       <w>newplayer</w>
       <w>newschedule</w>
+      <w>numrooms</w>
+      <w>numtoremove</w>
       <w>originalfield</w>
       <w>overlapthirty</w>
+      <w>pickten</w>
+      <w>playerspaces</w>
+      <w>playersperround</w>
       <w>poolcit</w>
       <w>poolsande</w>
       <w>practiceupdate</w>
       <w>roomnum</w>
       <w>roomnumber</w>
+      <w>roomplayers</w>
       <w>roounds</w>
       <w>roundnumber</w>
       <w>roundrooms</w>
@@ -64,10 +74,17 @@
       <w>schedulemil</w>
       <w>schedulesae</w>
       <w>schedulesiderooms</w>
+      <w>scoresheet</w>
+      <w>scoresheets</w>
+      <w>sideroomhelp</w>
       <w>signedup</w>
       <w>tempid</w>
       <w>temprestriction</w>
       <w>tempschedule</w>
+      <w>toadd</w>
+      <w>toremove</w>
+      <w>tosched</w>
+      <w>totrooms</w>
       <w>unaccoutned</w>
       <w>updateschedule</w>
       <w>xlsx</w>

@@ -40,7 +40,7 @@ class PDF(FPDF):
     def header(self):
         # logos
         self.image("/Users/chasefleming/PycharmProjects/NHFSchedule/docs/images/ACE_logo_Bee.jpg", 10, 13, 40)
-        self.image("/Users/chasefleming/PycharmProjects/NHFSchedule/docs/images/ACE_logo_Bee.jpg", 160, 13, 40)
+        self.image("/Users/chasefleming/PycharmProjects/NHFSchedule/docs/images/generic.jpg", 160, 15, 42)
         self.set_font('Helvetica', '', 32)
         # calculate width of title and position
         w = self.get_string_width(title) + 10
@@ -82,9 +82,7 @@ class PDF(FPDF):
         for spot in sorted(schedule, key=itemgetter(1)):
             eventtitle = spot[0]
             time = converter(spot[1])
-            place = "N/A"
-            if spot[2] is not None:
-                place = spot[2]
+            place = spot[2]
             self.cell(80, 20, eventtitle, align="C", border=1)
             self.cell(80, 20, time, align="C", border=1)
             self.cell(30, 20, place, align="C", border=1)

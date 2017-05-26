@@ -11,7 +11,7 @@ from BuzzerRoomClass import BuzzerRoom
 from ExamRoomClass import ExamRoom
 from SideEventRoomClass import SideEventRoom
 from math import ceil, floor
-from random import sample
+from random import sample, shuffle
 from operator import itemgetter
 
 MAX_ROOMS = 40
@@ -201,12 +201,12 @@ class Tournament(object):
 
     def schedulebuzzerrooms(self, field):
         """ Assigns field to buzzerrooms."""
-        seeds = [seed for seed in "abcdefghij"]
-        divisions = ["8", "7", "Elementary"]
+        divisions = ['8', '7', 'Elementary']
         field = list(filter(lambda stu: stu.bee is True, field))
         for player in field:
             player.schedule = list(sorted(player.schedule, key=itemgetter(1)))
 
+        # create a list of players in each round (1 - 16)
         playersperround = [[] for _ in range(len(self.buzzerschedule))]
         for i, time in enumerate(self.buzzerschedule, 0):
             for player in field:
@@ -214,14 +214,49 @@ class Tournament(object):
                     if time in event:
                         playersperround[i].append(player)
 
+        # create a list of rooms being used to try and spread across hotels
+        totrooms = [[] for _ in range(len(self.buzzerschedule))]
+        for i, rnd in enumerate(totrooms):
+            k = len(list(filter(lambda stu: stu.division == '8' and stu.seed == 'a', playersperround[i])))
+            k += len(list(filter(lambda stu: stu.division == '7' and stu.seed == 'a', playersperround[i])))
+            k += len(list(filter(lambda stu: stu.division == 'Elementary' and stu.seed == 'a', playersperround[i])))
+            rnd = range(1, MAX_ROOMS + 1)
+            numtoremove = MAX_ROOMS - k
+            toremove = sample(rnd, numtoremove)
+            rnd = [x for x in rnd if x not in toremove]
+            shuffle(rnd)
+            totrooms[i] = rnd
+        print totrooms
+
+        # for each round, assign the players in totrooms to a room
         count = 0
-        for j, rounds in enumerate(playersperround, 0):
-            roomcounter = 0
+        for rnd, rooms in enumerate(totrooms):
+            tosched = playersperround[rnd]
             for div in divisions:
-                for seed in seeds:
-                    tosched = list(filter(lambda stu: stu.division == div and stu.seed == seed, playersperround[j]))
-                    count += len(tosched)
-        print count
+                divforround = list(filter(lambda stu: stu.division == div, tosched))
+                for i in range(
+                        len(list(filter(lambda stu: stu.division == div and stu.seed == 'a', playersperround[rnd])))):
+                    room = sample(rooms, 1)[0]
+                    roomplayers = self.pickten(divforround)
+                    rooms.remove(room)
+                    for player in roomplayers:
+                        self.buzzerrooms[rnd][room - 1].addplayer(player)
+                        for ev in player.schedule:
+                            if ev[0] == "History Bee Buzzer Round" and ev[1] == self.buzzerschedule[rnd]:
+                                ev[2] = "Room " + str(room)
+                                count += 1
+
+    @staticmethod
+    def pickten(divforround):
+        """ Picks 10 players from divforround with different seeds and returns them."""
+        seeds = [seed for seed in "abcdefghij"]
+        players = []
+        for seed in seeds:
+            k = list(filter(lambda stu: stu.seed == seed, divforround))
+            players.append(sample(k, 1)[0])
+        for player in players:
+            divforround.remove(player)
+        return players
 
     @staticmethod
     def sideroomhelp(roomnum, players, rooms):
