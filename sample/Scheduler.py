@@ -10,6 +10,7 @@ from openpyxl import load_workbook, Workbook
 from PlayerClass import Player
 from FPDFClass import PDF
 from shutil import copy2
+from operator import itemgetter
 
 
 def generateplayingfield(info, tournament):
@@ -45,11 +46,12 @@ def generateplayingfield(info, tournament):
                            military, geography, fqn, seed, tournament)
         players.append(newplayer)
 
+    # remove header
+    players.pop(0)
+
     # close workbook and return players
     wb.close()
 
-    # remove headers from xlsx file
-    players.pop(0)
     return players
 
 
@@ -69,9 +71,9 @@ def schedulebuz(field, tournament):
     divisions = ['8', '7', "Elementary"]
     friday = tournament.buzzerschedule[0:8]
     saturday = tournament.buzzerschedule[8:]
-    eig = [12, 12, 12, 12, 12, 12, 12, 12]
-    sev = [9, 9, 9, 9, 9, 9, 9, 9]
-    elm = [10, 11, 10, 11, 10, 11, 10, 11]
+    eig = [8, 8, 8, 8, 9, 9, 9, 9]
+    sev = [8, 8, 7, 7, 8, 8, 8, 8]
+    elm = [9, 10, 9, 10, 9, 10, 9, 10]
     divisiontotals = zip(divisions, [eig, sev, elm])
 
     for div, tots in divisiontotals:
@@ -193,7 +195,7 @@ def createscoresheets(tournament):
             wb.close()
 
 
-def createmasters(tournament):
+def createmasters(field, tournament):
     """ Generates the master schedules. """
     seeds = [seed for seed in 'abcdefghij']
     print "Generating master schedules."
@@ -203,10 +205,10 @@ def createmasters(tournament):
     sub = "Exams/ExamMaster.xlsx"
     wb = Workbook()
     for rnd in tournament.examrooms:
-        ws = wb.create_sheet(title="ExamRound" + str(tournament.examrooms.index(rnd) + 1))
-        ws.append(["National History Bee Exam Round " + str(tournament.examrooms.index(rnd) + 1)])
+        ws = wb.create_sheet(title="examround" + str(tournament.examrooms.index(rnd) + 1))
+        ws.append(["Exam", "ID", "Name", "Scores"])
         for player in rnd.roster:
-            ws.append([player.name])
+            ws.append(["NHB Exam", str(player.seed).upper() + "-" + str(player.id), player.name])
     l = wb.get_sheet_names()[0]
     head = wb.get_sheet_by_name(l)
     wb.remove_sheet(head)
@@ -216,10 +218,10 @@ def createmasters(tournament):
     sub = "Exams/MilitaryMaster.xlsx"
     wb = Workbook()
     for rnd in tournament.militaryrooms:
-        ws = wb.create_sheet(title="MilitaryExamRound" + str(tournament.militaryrooms.index(rnd) + 1))
-        ws.append(["National History Bee Military Exam Round " + str(tournament.militaryrooms.index(rnd) + 1)])
+        ws = wb.create_sheet(title="militaryexamround" + str(tournament.militaryrooms.index(rnd) + 1))
+        ws.append(["Exam", "ID", "Name", "Scores"])
         for player in rnd.roster:
-            ws.append([player.name])
+            ws.append(["Military History Subject Exam", str(player.seed).upper() + "-" + str(player.id), player.name])
     l = wb.get_sheet_names()[0]
     head = wb.get_sheet_by_name(l)
     wb.remove_sheet(head)
@@ -229,10 +231,10 @@ def createmasters(tournament):
     sub = "Exams/GeographyMaster.xlsx"
     wb = Workbook()
     for rnd in tournament.geographyrooms:
-        ws = wb.create_sheet(title="MilitaryExamRound" + str(tournament.geographyrooms.index(rnd) + 1))
-        ws.append(["National History Bee Military Exam Round " + str(tournament.geographyrooms.index(rnd) + 1)])
+        ws = wb.create_sheet(title="geographysubjectround" + str(tournament.geographyrooms.index(rnd) + 1))
+        ws.append(["Exam", "ID", "Name", "Scores"])
         for player in rnd.roster:
-            ws.append([player.name])
+            ws.append(["Geogrpahy Subject Exam", str(player.seed).upper() + "-" + str(player.id), player.name])
     l = wb.get_sheet_names()[0]
     head = wb.get_sheet_by_name(l)
     wb.remove_sheet(head)
@@ -241,8 +243,30 @@ def createmasters(tournament):
     # do buzzer rounds
     sub = "Buzzer/BuzzerMaster.xlsx"
     wb = Workbook()
+    ws = wb.active
+    ws.append(["Name", "ID", "First Round", "Second Round", "Third Round", "Fourth Round", "Exam", "Total"])
+    offset = 0
+    players = list(filter(lambda stu: stu.bee, field))
+    for player in players:
+        equations = []
+        exam = []
+        for event in sorted(player.schedule, key=itemgetter(1)):
+            if event[0] == "History Bee Buzzer Round":
+                room = str(tournament.buzzerschedule.index(event[1]) + 1)
+                eq = "=VLOOKUP(OFFSET(A2," + str(offset) + ",0),$buzzerRound" + room + ".C2:D500, 2, 0)"
+                equations.append(eq)
+            if event[0] == "History Bee Exam":
+                room = str(tournament.examschedule.index(event[1]) + 1)
+                eq = "=VLOOKUP(OFFSET(A2," + str(offset) + ",0),$examround" + room + ".C2:D500, 2, 0)"
+                exam.append(eq)
+        print len(equations)
+        ws.append([player.name, str(player.seed).upper() + "-" + str(player.id), equations[0], equations[1], equations[2], equations[3],
+                   exam[0],
+                   "=SUM(OFFSET(A2, " + str(offset) + ", 2):OFFSET(A2," + str(offset) + ", 6)) - MIN(OFFSET(A2," +
+                   str(offset) + ", 2):OFFSET(A2," + str(offset) + ", 5))"])
+        offset += 1
     for rnd in tournament.buzzerrooms:
-        ws = wb.create_sheet(title="BuzzerRound" + str(tournament.buzzerrooms.index(rnd) + 1))
+        ws = wb.create_sheet(title="buzzerround" + str(tournament.buzzerrooms.index(rnd) + 1))
         ws.append(["Room", "ID", "Name", "Score"])
         for room in rnd:
             if room.roster['a'] is None:
@@ -250,6 +274,11 @@ def createmasters(tournament):
             for s in seeds:
                 ros = room.roster
                 ws.append([room.roomnumber+1, str(ros[s].seed).upper() + "-" + str(ros[s].id), ros[s].name])
+    for rnd in tournament.examrooms:
+        ws = wb.create_sheet(title="examround" + str(tournament.examrooms.index(rnd) + 1))
+        ws.append(["Exam", "ID", "Name", "Scores"])
+        for player in rnd.roster:
+            ws.append(["NHB Exam", str(player.seed).upper() + "-" + str(player.id), player.name])
     wb.save(directory + sub)
 
     # do for citizenship

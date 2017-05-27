@@ -14,7 +14,7 @@ from math import ceil, floor
 from random import sample, shuffle
 from operator import itemgetter
 
-MAX_ROOMS = 40
+MAX_ROOMS = 42
 ROOM_RANGE = xrange(MAX_ROOMS)
 
 
@@ -47,15 +47,19 @@ class Tournament(object):
 
     def __init__(self):
         """ Initialize the tournament by creating the schedule and the rooms. """
+        self.usablerooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26,
+                       27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42]
+
         buzztimes = [110, 110.5, 111, 111.5, 113, 113.5, 114, 114.5,
                      211, 211.5, 212, 212.5, 214, 214.5, 215, 215.5, ]
         self.buzzerschedule = list(map(lambda time: interval([time, time + .5]), buzztimes))
 
+        # took 213 out re add it
         # fill exam schedule
-        examtimes = [110, 111, 114, 115, 118, 119, 120, 209, 211, 214, 215]
+        examtimes = [109, 110, 111, 114, 115, 118, 119, 120, 211, 214, 215]
         self.examschedule = list(map(lambda time: interval([time, time + 1]), examtimes))
         self.militaryschedule = list(map(lambda time: interval([time, time + 1]), [112, 217]))
-        self.geographyschedule = list(map(lambda time: interval([time, time + 1]), [213, 117]))
+        self.geographyschedule = list(map(lambda time: interval([time, time + 1]), [213, 117,]))
         self.csaexamschedule = list(map(lambda time: interval([time, time + 1]), [116, 210]))
 
         # fill side schedule
@@ -160,12 +164,12 @@ class Tournament(object):
         elm2 = list(filter(lambda stu: stu.division == 'Elementary', poolsande[1]))
 
         # puts players into rooms
-        rn = [40]
+        rn = [MAX_ROOMS]
         self.sideroomhelp(rn, eig1, self.sanderooms[0])
         self.sideroomhelp(rn, sev1, self.sanderooms[0])
         self.sideroomhelp(rn, elm1, self.sanderooms[0])
 
-        rn = [40]
+        rn = [MAX_ROOMS]
         self.sideroomhelp(rn, eig2, self.sanderooms[1])
         self.sideroomhelp(rn, sev2, self.sanderooms[1])
         self.sideroomhelp(rn, elm2, self.sanderooms[1])
@@ -189,12 +193,12 @@ class Tournament(object):
         elm2 = list(filter(lambda stu: stu.division == 'Elementary', poolcit[1]))
 
         # puts players into rooms
-        rn = [40]
+        rn = [MAX_ROOMS]
         self.sideroomhelp(rn, eig1, self.citizenrooms[0])
         self.sideroomhelp(rn, sev1, self.citizenrooms[0])
         self.sideroomhelp(rn, elm1, self.citizenrooms[0])
 
-        rn = [40]
+        rn = [MAX_ROOMS]
         self.sideroomhelp(rn, eig2, self.citizenrooms[1])
         self.sideroomhelp(rn, sev2, self.citizenrooms[1])
         self.sideroomhelp(rn, elm2, self.citizenrooms[1])
@@ -202,7 +206,7 @@ class Tournament(object):
     def schedulebuzzerrooms(self, field):
         """ Assigns field to buzzerrooms."""
         divisions = ['8', '7', 'Elementary']
-        field = list(filter(lambda stu: stu.bee is True, field))
+        field = list(filter(lambda stu: stu.bee, field))
         for player in field:
             player.schedule = list(sorted(player.schedule, key=itemgetter(1)))
 
@@ -215,6 +219,7 @@ class Tournament(object):
                         playersperround[i].append(player)
 
         # create a list of rooms being used to try and spread across hotels
+        """
         totrooms = [[] for _ in range(len(self.buzzerschedule))]
         for i, rnd in enumerate(totrooms):
             k = len(list(filter(lambda stu: stu.division == '8' and stu.seed == 'a', playersperround[i])))
@@ -226,7 +231,27 @@ class Tournament(object):
             rnd = [x for x in rnd if x not in toremove]
             shuffle(rnd)
             totrooms[i] = rnd
-        print totrooms
+        """
+
+        totrooms = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40,],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42]]
+
+        for rnd in totrooms:
+            shuffle(rnd)
 
         # for each round, assign the players in totrooms to a room
         count = 0

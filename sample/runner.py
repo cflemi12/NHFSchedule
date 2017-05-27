@@ -3,8 +3,8 @@ from Scheduler import generateplayingfield, createpdfs, doscheduling, createscor
 import time
 import PlayerClass
 import copy
-from shutil import copy2
-from openpyxl import load_workbook
+from openpyxl import Workbook
+
 
 
 
@@ -36,13 +36,13 @@ def main():
 
 
     # generate PDFs
-    createpdfs(field)
+    #createpdfs(field)
 
     # create scoresheets
-    createscoresheets(nhf)
+    #createscoresheets(nhf)
 
     # create master schedules
-    createmasters(nhf)
+    createmasters(field, nhf)
 
 
 if __name__ == "__main__":
