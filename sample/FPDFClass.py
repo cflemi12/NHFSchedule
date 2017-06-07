@@ -8,7 +8,7 @@ Enables use of HTML.
 from fpdf import FPDF
 from operator import itemgetter
 
-title = "Schedule"
+title = "Participant Schedule"
 
 
 def converter(interval):
@@ -39,14 +39,16 @@ def converter(interval):
 class PDF(FPDF):
     def header(self):
         # logos
-        self.image("/Users/chasefleming/PycharmProjects/NHFSchedule/docs/images/ACE_logo_Bee.jpg", 10, 13, 40)
-        self.image("/Users/chasefleming/PycharmProjects/NHFSchedule/docs/images/generic.jpg", 160, 15, 42)
-        self.set_font('Helvetica', '', 32)
+        self.image("/Users/chasefleming/PycharmProjects/NHFSchedule/docs/images/ACE_logo_Bee.jpg", 10, 10, 50, 50)
+        self.image("/Users/chasefleming/PycharmProjects/NHFSchedule/docs/images/generic.jpg", 160, 10, 50, 50)
+        self.set_font('Helvetica', '', 28)
         # calculate width of title and position
         w = self.get_string_width(title) + 10
         self.set_x((210 - w) / 2)
         # title
         self.cell(w, 39, title, 0, 1, 'C', 0)
+
+
 
 
     def footer(self):
@@ -55,10 +57,9 @@ class PDF(FPDF):
         # helvetica 10 font
         self.set_font('Helvetica', '', 10)
         # bottom information
-        self.cell(0, 10, "Hilton: Rooms 1-15, Marriott: Rooms 16-30, Hyatt: Rooms 31-40 and Exam Room", 0, 0, 'C')
+        self.cell(0, 10, "Hilton: Rooms 1-10, Marriott: Rooms 22-30, Hyatt: Rooms 33-42 and Exam Room", 0, 0, 'C')
 
     def schedule_name(self, name, uid, seed):
-        # Arial 12
         self.set_font('Helvetica', 'B', 22)
         # Title
         w = self.get_string_width(name) + 10
@@ -66,7 +67,7 @@ class PDF(FPDF):
         self.set_line_width(1.25)
         self.cell(w, 15, name, 1, 1, 'C', 0)
         # Fill id
-        code = seed.upper() + "-" + str(uid).upper()
+        code = "ID: " + seed.upper() + "-" + str(uid).upper()
         w = self.get_string_width(code) + 10
         self.set_x((210 - w) / 2)
         self.set_line_width(1.25)
@@ -83,10 +84,10 @@ class PDF(FPDF):
             eventtitle = spot[0]
             time = converter(spot[1])
             place = spot[2]
-            self.cell(80, 20, eventtitle, align="C", border=1)
-            self.cell(80, 20, time, align="C", border=1)
-            self.cell(30, 20, place, align="C", border=1)
-            self.ln(20)
+            self.cell(80, 15, eventtitle, align="C", border=1)
+            self.cell(80, 15, time, align="C", border=1)
+            self.cell(30, 15, place, align="C", border=1)
+            self.ln(15)
 
     def print_schedule(self, name, schedule, uid, seed):
         self.add_page()

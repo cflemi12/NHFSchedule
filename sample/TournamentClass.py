@@ -26,8 +26,8 @@ class Tournament(object):
         Attributes:
             buzzerschedule - Intervals of buzzer round times.
             examschedule - Intervals of regular exam round times.
-            militaryschedule - Intervals of military exam round times.
-            geographyschedule - Intervals of geography exam round times.
+            militaryschedule - Intervals of military history subject exam round times.
+            geographyschedule - Intervals of geography subject exam round times.
             csaexamschedule - Intervals of citizen, sports, and anniversary exam round times.
             citizenschedule - Intervals of citizenship bee round times.
             sandeschedule - Intervals of sports and entertainment bee round times.
@@ -39,8 +39,8 @@ class Tournament(object):
             sanderooms - Rooms for the sports and entertainment bee.
             citizenrooms - Rooms for the citizenship bee.
             examrooms - ExamRoom for all regular exams.
-            militaryrooms - Military exam room.
-            geographyrooms - Geography exam room.
+            militaryrooms - Military history subject exam room.
+            geographyrooms - Geography subject exam room.
             csarooms - CSA exam rooms.
 
     """
@@ -54,12 +54,11 @@ class Tournament(object):
                      211, 211.5, 212, 212.5, 214, 214.5, 215, 215.5, ]
         self.buzzerschedule = list(map(lambda time: interval([time, time + .5]), buzztimes))
 
-        # took 213 out re add it
         # fill exam schedule
-        examtimes = [109, 110, 111, 114, 115, 118, 119, 120, 211, 214, 215]
+        examtimes = [110, 111, 114, 115, 118, 119, 120, 209, 211, 213, 214, 215]
         self.examschedule = list(map(lambda time: interval([time, time + 1]), examtimes))
-        self.militaryschedule = list(map(lambda time: interval([time, time + 1]), [112, 217]))
-        self.geographyschedule = list(map(lambda time: interval([time, time + 1]), [213, 117,]))
+        self.militaryschedule = list(map(lambda time: interval([time, time + 1]), [112, 117, 217]))
+        self.geographyschedule = list(map(lambda time: interval([time, time + 1]), [112, 117, 217]))
         self.csaexamschedule = list(map(lambda time: interval([time, time + 1]), [116, 210]))
 
         # fill side schedule
@@ -106,7 +105,7 @@ class Tournament(object):
         k = xrange(len(self.militaryschedule))
         self.militaryrooms = list(map(lambda j: ExamRoom("military", self.militaryschedule, j), k))
 
-        # geography exam rooms
+        # geography subject exam rooms
         k = xrange(len(self.geographyschedule))
         self.geographyrooms = list(map(lambda j: ExamRoom("geography", self.geographyschedule, j), k))
 
@@ -126,17 +125,17 @@ class Tournament(object):
                     self.examrooms[self.examschedule.index(event[1])].addplayer(player)
                     event[2] = "Exam Room"
 
-        # geography exams
+        # geography subject exams
         for player in field:
             for event in player.schedule:
-                if event[0] == "Geography Exam":
+                if event[0] == "Geography Subject Exam":
                     self.geographyrooms[self.geographyschedule.index(event[1])].addplayer(player)
                     event[2] = "Exam Room"
 
         # military exams
         for player in field:
             for event in player.schedule:
-                if event[0] == "Military Exam":
+                if event[0] == "Military History Subject Exam":
                     self.militaryrooms[self.militaryschedule.index(event[1])].addplayer(player)
                     event[2] = "Exam Room"
 
@@ -149,9 +148,9 @@ class Tournament(object):
         poolsande = [[] for _ in self.sandeschedule]
         for player in sande:
             for event in player.schedule:
-                if event[0] == "Sports and Entertainment Bee":
+                if event[0] == "Sports & Entertain. Bee Buzzer Round":
                     poolsande[self.sandeschedule.index(event[1])].append(player)
-                if event[0] == "Sports and Entertainemnt Exam":
+                if event[0] == "Sports & Entertainemnt Exam":
                     self.csarooms[self.csaexamschedule.index(event[1])][1].addplayer(player)
                     event[2] = "Exam Room"
 
@@ -164,12 +163,12 @@ class Tournament(object):
         elm2 = list(filter(lambda stu: stu.division == 'Elementary', poolsande[1]))
 
         # puts players into rooms
-        rn = [MAX_ROOMS]
+        rn = list(reversed(self.usablerooms))
         self.sideroomhelp(rn, eig1, self.sanderooms[0])
         self.sideroomhelp(rn, sev1, self.sanderooms[0])
         self.sideroomhelp(rn, elm1, self.sanderooms[0])
 
-        rn = [MAX_ROOMS]
+        rn = list(reversed(self.usablerooms))
         self.sideroomhelp(rn, eig2, self.sanderooms[1])
         self.sideroomhelp(rn, sev2, self.sanderooms[1])
         self.sideroomhelp(rn, elm2, self.sanderooms[1])
@@ -178,9 +177,9 @@ class Tournament(object):
         poolcit = [[] for _ in self.citizenschedule]
         for player in cit:
             for event in player.schedule:
-                if event[0] == "Citizenship Bee":
+                if event[0] == "Citizenship Bee Buzzer Round":
                     poolcit[self.citizenschedule.index(event[1])].append(player)
-                if event[0] == "Citizenship Exam":
+                if event[0] == "Citizenship Bee Exam":
                     self.csarooms[self.csaexamschedule.index(event[1])][0].addplayer(player)
                     event[2] = "Exam Room"
 
@@ -193,12 +192,12 @@ class Tournament(object):
         elm2 = list(filter(lambda stu: stu.division == 'Elementary', poolcit[1]))
 
         # puts players into rooms
-        rn = [MAX_ROOMS]
+        rn = list(reversed(self.usablerooms))
         self.sideroomhelp(rn, eig1, self.citizenrooms[0])
         self.sideroomhelp(rn, sev1, self.citizenrooms[0])
         self.sideroomhelp(rn, elm1, self.citizenrooms[0])
 
-        rn = [MAX_ROOMS]
+        rn = list(reversed(self.usablerooms))
         self.sideroomhelp(rn, eig2, self.citizenrooms[1])
         self.sideroomhelp(rn, sev2, self.citizenrooms[1])
         self.sideroomhelp(rn, elm2, self.citizenrooms[1])
@@ -233,21 +232,21 @@ class Tournament(object):
             totrooms[i] = rnd
         """
 
-        totrooms = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40,],
+        totrooms = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40],
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 39, 40, 41, 42]]
 
         for rnd in totrooms:
@@ -268,7 +267,7 @@ class Tournament(object):
                         self.buzzerrooms[rnd][room - 1].addplayer(player)
                         for ev in player.schedule:
                             if ev[0] == "History Bee Buzzer Round" and ev[1] == self.buzzerschedule[rnd]:
-                                ev[2] = "Room " + str(room)
+                                ev[2] = "ACE Room " + str(room)
                                 count += 1
 
     @staticmethod
@@ -297,8 +296,8 @@ class Tournament(object):
                 players.remove(player)
                 rooms[roomnum[0] - 1].addplayer(player)
                 for event in player.schedule:
-                    if event[0] == "Sports and Entertainment Bee":
-                        event[2] = "Room " + str(roomnum[0])
-                    if event[0] == "Citizenship Bee":
-                        event[2] = "Room " + str(roomnum[0])
-            roomnum[0] -= 1
+                    if event[0] == "Sports & Entertain. Bee Buzzer Round":
+                        event[2] = "ACE Room " + str(roomnum[0])
+                    if event[0] == "Citizenship Bee Buzzer Round":
+                        event[2] = "ACE Room " + str(roomnum[0])
+            roomnum.pop(0)

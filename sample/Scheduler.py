@@ -61,7 +61,8 @@ def createpdfs(players):
     for player in players:
         pdf = PDF()
         pdf.print_schedule(player.name, player.schedule, player.id, player.seed)
-        pdf.output('/Users/chasefleming/PycharmProjects/NHFSchedule/output/Schedules/' + player.name + '.pdf', 'F')
+        savename = player.name.split(" ")[-1] + ", " + " ".join(player.name.split(" ")[0:-1])
+        pdf.output('/Users/chasefleming/PycharmProjects/NHFSchedule/output/Schedules/' + savename + '.pdf', 'F')
 
 
 def schedulebuz(field, tournament):
@@ -71,9 +72,9 @@ def schedulebuz(field, tournament):
     divisions = ['8', '7', "Elementary"]
     friday = tournament.buzzerschedule[0:8]
     saturday = tournament.buzzerschedule[8:]
-    eig = [8, 8, 8, 8, 9, 9, 9, 9]
-    sev = [8, 8, 7, 7, 8, 8, 8, 8]
-    elm = [9, 10, 9, 10, 9, 10, 9, 10]
+    eig = [9, 8, 9, 8, 9, 9, 9, 9]
+    sev = [8, 8, 8, 8, 8, 8, 8, 8]
+    elm = [9, 10, 9, 10, 10, 10, 10, 10]
     divisiontotals = zip(divisions, [eig, sev, elm])
 
     for div, tots in divisiontotals:
@@ -111,7 +112,7 @@ def createscoresheets(tournament):
     directory = "/Users/chasefleming/PycharmProjects/NHFSchedule/output/Scoresheets/Buzzer/"
     for i, roundrooms in enumerate(tournament.buzzerrooms):
         for j, room in enumerate(roundrooms):
-            if room.roster['a'] is None:
+            if (room.roomnumber + 1) not in tournament.usablerooms:
                 continue
             playerspaces = ['B8', 'B9', 'B10', 'B11', 'B12', 'B14', 'B15', 'B16', 'B17', 'B18']
             name = "BuzzerRound" + str(i + 1) + "Room" + str(j + 1) + ".xlsx"
@@ -121,20 +122,24 @@ def createscoresheets(tournament):
             wb.template = True
             ws = wb.active
             ws['M2'] = "NHB Buzzer"
-            ws['O2'] = "Room " + str(j + 1)
+            ws['O2'] = "ACE Room " + str(j + 1)
             ws['O4'] = "Round " + str(i + 1)
             time = room.schedule[room.roundnumber][0][0]
             if time < 200:
                 ws['M4'] = "Friday"
             else:
                 ws['M4'] = "Saturday"
-            for space, seed in zip(playerspaces, seeds):
-                stu = room.roster[seed]
-                name = stu.name
-                ws[space] = str(name[0] + "." + name[(name.index(" ")):]) + " " + \
-                            str(stu.seed).upper() + "-" + str(stu.id)
-            wb.save(dst)
-            wb.close()
+            if room.roster['a'] is None:
+                wb.save(dst)
+                wb.close()
+            else:
+                for space, seed in zip(playerspaces, seeds):
+                    stu = room.roster[seed]
+                    name = stu.name
+                    ws[space] = str(name[0] + "." + name[(name.index(" ")):]) + " " + \
+                                str(stu.seed).upper() + "-" + str(stu.id)
+                wb.save(dst)
+                wb.close()
 
     # create Citizenship buzzer round scoresheets
     directory = "/Users/chasefleming/PycharmProjects/NHFSchedule/output/Scoresheets/Citizen/"
@@ -148,7 +153,7 @@ def createscoresheets(tournament):
             copy2(orig, dst)
             wb = load_workbook(dst)
             ws = wb.active
-            ws['M2'] = "Citzenship Bee"
+            ws['M2'] = "Citzenship"
             ws['O2'] = "Room " + str(j + 1)
             ws['O4'] = "Round " + str(i + 1)
             time = room.schedule[room.roundnumber][0][0]
@@ -177,8 +182,8 @@ def createscoresheets(tournament):
             copy2(orig, dst)
             wb = load_workbook(dst)
             ws = wb.active
-            ws['M2'] = "Sports and Entertainment Bee"
-            ws['O2'] = "Room " + str(j + 1)
+            ws['M2'] = "S & E"
+            ws['O2'] = "ACE Room " + str(j + 1)
             ws['O4'] = "Round " + str(i + 1)
             time = room.schedule[room.roundnumber][0][0]
             if time < 200:
@@ -259,7 +264,6 @@ def createmasters(field, tournament):
                 room = str(tournament.examschedule.index(event[1]) + 1)
                 eq = "=VLOOKUP(OFFSET(A2," + str(offset) + ",0),$examround" + room + ".C2:D500, 2, 0)"
                 exam.append(eq)
-        print len(equations)
         ws.append([player.name, str(player.seed).upper() + "-" + str(player.id), equations[0], equations[1], equations[2], equations[3],
                    exam[0],
                    "=SUM(OFFSET(A2, " + str(offset) + ", 2):OFFSET(A2," + str(offset) + ", 6)) - MIN(OFFSET(A2," +
@@ -314,9 +318,9 @@ def createmasters(field, tournament):
 
 def doscheduling(field, tournament):
     """Does all the heavy lifting. Makes the schedule for each student."""
-    print "Scheduling Military Exams."
+    print "Scheduling Military History Subject Exams."
     map(lambda stu: stu.schedulemil(tournament), field)
-    print "Scheduling Geography Exams."
+    print "Scheduling Geography Subject Exams."
     map(lambda stu: stu.schedulegeo(tournament), field)
     print "Scheduling Side Events."
     map(lambda stu: stu.schedulecit(tournament), field)

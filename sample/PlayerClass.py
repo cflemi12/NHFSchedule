@@ -78,25 +78,25 @@ class Player(object):
                 self.military, self.geography, self.bowl, self.seed]
 
     def schedulemil(self, tournament):
-        """ Schedules a player for a military exam. """
+        """ Schedules a player for a military history subject exam. """
         if self.military is False:
             return self
         time = random.choice(tournament.militaryschedule)
         while self.overlap(time):
             time = random.choice(tournament.militaryschedule)
-        event = ["Military Exam", time, None]
+        event = ["Military History Subject Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
 
     def schedulegeo(self, tournament):
-        """ Schedules a player for a military exam. """
+        """ Schedules a player for a geography exam. """
         if self.geography is False:
             return self
         time = random.choice(tournament.geographyschedule)
         while self.overlap(time):
             time = random.choice(tournament.militaryschedule)
-        event = ["Geography Exam", time, None]
+        event = ["Geography Subject Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
@@ -108,31 +108,31 @@ class Player(object):
         time = random.choice(tournament.citizenschedule)
         while self.overlap(time):
             time = random.choice(tournament.citizenschedule)
-        event = ["Citizenship Bee", time, None]
+        event = ["Citizenship Bee Buzzer Round", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         time = random.choice(tournament.csaexamschedule)
         while self.overlap(time):
             time = random.choice(tournament.csaexamschedule)
-        event = ["Citizenship Exam", time, None]
+        event = ["Citizenship Bee Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
 
     def schedulesae(self, tournament):
-        """ Scheduels a player for the citizenship bee. """
+        """ Scheduels a player for the sande. """
         if self.sande is False:
             return self
         time = random.choice(tournament.sandeschedule)
         while self.overlap(time):
             time = random.choice(tournament.sandeschedule)
-        event = ["Sports and Entertainment Bee", time, None]
+        event = ["Sports & Entertain. Bee Buzzer Round", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         time = random.choice(tournament.csaexamschedule)
         while self.overlap(time):
             time = random.choice(tournament.csaexamschedule)
-        event = ["Sports and Entertainemnt Exam", time, None]
+        event = ["Sports & Entertainemnt Exam", time, None]
         self.schedule.append(event)
         self.restriction.append(time)
         return self
@@ -161,7 +161,6 @@ class Player(object):
         tempschedule = self.schedule[:]
         temprestriction = self.restriction[:]
         times = sched[:]
-
         # Attempt first buzz round
         time = random.choice(times)
         while overlapthirty(time, temprestriction) or freq[sched.index(time)] >= tots[sched.index(time)]:
